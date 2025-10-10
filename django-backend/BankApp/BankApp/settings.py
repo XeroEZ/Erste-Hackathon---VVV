@@ -66,6 +66,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'BankApp.wsgi.application'
 
 
@@ -83,6 +85,9 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
+# TEST
 
 
 # Password validation
