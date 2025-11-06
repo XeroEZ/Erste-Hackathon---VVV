@@ -37,9 +37,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'BankApp', 
-    'core', 
+
+    'core',          # your core app
+    'Banking',       # must match folder name exactlyINSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
 
 
 MIDDLEWARE = [
@@ -90,7 +104,6 @@ DATABASES = {
     }
 }
 
-
 # TEST python manage.py dbshell
 
 
@@ -134,3 +147,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# TODO vyhodit v production
+CORS_ALLOW_ALL_ORIGINS = True
