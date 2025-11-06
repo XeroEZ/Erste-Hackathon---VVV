@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'BankApp.urls'
@@ -84,7 +85,12 @@ TEMPLATES = [
     },
 ]
 
-
+# Allow frontend to call backend
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:19006",  # Expo web interface
+    "http://localhost:19000",  # Expo dev server
+    "http://127.0.0.1:19006",
+]
 
 WSGI_APPLICATION = 'BankApp.wsgi.application'
 
@@ -150,3 +156,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # TODO vyhodit v production
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
