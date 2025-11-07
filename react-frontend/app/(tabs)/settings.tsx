@@ -9,7 +9,7 @@ import supportIcon from "@/assets/icons/support.png";
 import userIcon from "@/assets/icons/user.png";
 import editIcon from "@/assets/icons/edit.png";
 import logoutIcon from "@/assets/icons/logout.png";
-import { changePassword } from "@/services/api";
+//import { changePassword } from "@/services/api";
 
 const Settings = () => {
   const [pwdModal, setPwdModal] = useState(false);
@@ -41,7 +41,7 @@ const Settings = () => {
     }
     try {
       setSubmitting(true);
-      await changePassword({ current_password: currentPwd, new_password: newPwd, new_password_confirm: confirmPwd });
+      //await changePassword({ current_password: currentPwd, new_password: newPwd, new_password_confirm: confirmPwd });
       setSubmitting(false);
       Alert.alert("Hotovo", "Heslo bolo zmenené. Prihláste sa znova.");
       closePwdModal();
