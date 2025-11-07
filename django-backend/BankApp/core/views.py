@@ -1,11 +1,22 @@
 from django.shortcuts import render
-
-
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import ChatSession, ChatMessage
 from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Product
+
+class ProductListView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        products = Product.objects.all().values()
+        return Response(list(products))
+
 
 @login_required
 def start_chat(request):
@@ -36,3 +47,4 @@ def get_chat_history(request, session_id):
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     messages = session.messages.order_by("created_at").values("sender", "message", "created_at")
     return JsonResponse(list(messages), safe=False)
+

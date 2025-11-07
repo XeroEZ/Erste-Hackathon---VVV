@@ -4,7 +4,12 @@ services:
     build:
       context: ./django-backend
     working_dir: /app/BankApp
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "
+        python manage.py makemigrations --noinput &&
+        python manage.py migrate --noinput &&
+        python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - ./django-backend:/app
     ports:
@@ -12,6 +17,11 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=BankApp.settings
+      - DB_NAME=vvv_db_vxj0
+      - DB_USER=tester1
+      - DB_PASSWORD=D9UmJT7tMz418GQGnUmcwIVv6za43UR4
+      - DB_HOST=dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com
+      - DB_PORT=5432
     depends_on:
       - db
 

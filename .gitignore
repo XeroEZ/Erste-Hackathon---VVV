@@ -1,11 +1,14 @@
+# IDE and environment
 .idea/
-__pycache__/*
+venv/
+
+# Python cache
+__pycache__/
+*/__pycache__/
+*.py[cod]
+
+# Images
 *.svg
 *.png
 *.jpg
 *.jpeg
-venv/
-__pycache__/
-*.pyc
-__pycache__/
-*.pyc
