@@ -1,7 +1,7 @@
 from . import geminiKey
 
 
-def AkinatorHra(otazka) -> str:
+def OtazkaNaGeminiBasic(otazka) -> str:
 
     try:
         client = geminiKey.ClientApi()
@@ -29,7 +29,7 @@ def AkinatorHra(otazka) -> str:
 def main():
     print("Vitaj v hre Akinator!")
     # spýtaj sa používateľa na odpoveď
-    user_input = input("Zadaj svoju odpoveď (napr. áno/nie): ")
+    user_input = input("Zadaj svoju otazku?")
     # volanie tvojej funkcie AkinatorHra s parametrom
     result = AkinatorHra(user_input)
     # vypíš výsledok
