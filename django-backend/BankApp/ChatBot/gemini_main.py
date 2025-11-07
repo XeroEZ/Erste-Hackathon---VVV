@@ -31,7 +31,7 @@ def main():
     # spýtaj sa používateľa na odpoveď
     user_input = input("Zadaj svoju otazku?")
     # volanie tvojej funkcie AkinatorHra s parametrom
-    result = AkinatorHra(user_input)
+    result = OtazkaNaGeminiBasic(user_input)
     # vypíš výsledok
     print("Výsledok:", result)
 
