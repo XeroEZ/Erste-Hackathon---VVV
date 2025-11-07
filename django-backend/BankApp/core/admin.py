@@ -27,7 +27,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(StoreUnit)
 class StoreUnitAdmin(admin.ModelAdmin):
-    list_display = ('name', 'organization', 'street_name', 'building_number', 'municipality')
+    list_display = ('unit_id', 'name', 'organization', 'street_name', 'building_number', 'municipality', 'latitude', 'longitude')
     search_fields = ('name', 'street_name', 'organization__name')
     list_filter = ('country', 'municipality', 'organization')
     readonly_fields = ('unit_id',)
