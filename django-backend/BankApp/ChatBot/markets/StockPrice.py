@@ -18,7 +18,7 @@ def zobraz_cenu(nazov: str, symbol: str):
 
         if "data" in data and len(data["data"]) > 0:
             price = data["data"][0]["close"]
-            return(f"Aktuálna cena na burze pre {nazov} ({symbol}) je {price} USD")
+            return(f"Aktuálna cena na burze pre {nazov} ({symbol}) je {price}€")
         else:
             return(f"Nepodarilo sa nájsť dáta pre {nazov} ({symbol}).")
 
@@ -29,6 +29,6 @@ def zobraz_cenu(nazov: str, symbol: str):
 
 
 # 🔹 Príklad použitia:
-print(zobraz_cenu("Zlato", "OIS"))
+#print(zobraz_cenu("Zlato", "OIS"))
 #print(zobraz_cenu("NVIDIA", "NVDA"))
 
