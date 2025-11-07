@@ -14,6 +14,7 @@ def OtazkaNaGeminiBasic(otazka) -> str:
             temperature=0.0
         )
 
+
         response = client.models.generate_content(
             model="gemini-2.5-flash", 
             contents=prompt_text,
