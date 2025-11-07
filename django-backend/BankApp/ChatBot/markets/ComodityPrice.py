@@ -1,33 +1,27 @@
 import requests
 
-API_KEY = "KegZpgZBwQSbSw5sPfLYlzXa6wwM7Oqt"  # môžeš použiť "demo" na test alebo si spraviť vlastný free key
-BASE_URL = "https://financialmodelingprep.com/api/v3"
+API_KEY = "K4pIQ52ezMCsHV5+BYAPhQ==xG6i2YH04jSVr8UH"
 
-def zobraz_cenu(nazov: str, symbol: str):
-    if symbol.lower() in ["gold", "silver", "oil", "crude", "brent"]:
-        url = f"{BASE_URL}/quotes/commodity?apikey={API_KEY}"
-    else:
-        url = f"{BASE_URL}/quote/{symbol}?apikey={API_KEY}"
+def cena_komodity(komodita: str):
+    """
+    Získa aktuálnu cenu komodity z API Ninjas.
+    :param komodita: názov komodity v angličtine, napr. 'platinum', 'gold', 'crude_oil'
+    """
+    url = f"https://api.api-ninjas.com/v1/commodityprice?name={komodita}"
+    headers = {"X-Api-Key": API_KEY}
 
-    resp = requests.get(url)
-    data = resp.json()
+    try:
+        resp = requests.get(url, headers=headers)
+        
+        resp.raise_for_status()
+        data = resp.json()
+        return f"Aktualna cena {komodita} je: {round(data["price"] * 0.86, 2)} €."
 
-    # ak sú to komodity
-    if isinstance(data, list) and len(data) > 0:
-        for item in data:
-            if nazov.lower() in item["name"].lower():
-                price = item.get("price")
-                return f"Aktuálna cena {item['name']} je {price} USD"
-        return f"Nepodarilo sa nájsť cenu pre {nazov}"
-    # ak sú to akcie
-    elif isinstance(data, list) and len(data) == 1:
-        price = data[0].get("price")
-        return f"Aktuálna cena na burze pre {nazov} ({symbol}) je {price} USD"
-    else:
-        return f"Nepodarilo sa načítať dáta. Odpoveď: {data}"
+    except requests.exceptions.RequestException as e:
+        return f"Chyba pri načítaní dát: {e}"
+    except (KeyError, IndexError):
+        return "Neočakávaný formát dát z API."
 
-# 🔹 Príklady:
-print(zobraz_cenu("Apple", "AAPL"))
-print(zobraz_cenu("NVIDIA", "NVDA"))
-print(zobraz_cenu("Zlato", "gold"))
-print(zobraz_cenu("Ropa", "crude oil"))
+
+# 🔹 Príklad použitia:
+print(cena_komodity("platinum"))
