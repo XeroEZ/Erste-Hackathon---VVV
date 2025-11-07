@@ -16,30 +16,45 @@ const chat = () => {
         resizeMode="cover"
       />
 
-      <View>
-        <ReccomendedPromptCard
-          prompt="What's my account balance?"
-          color="blue"
-        />
+      <View className="flex-1 justify-center items-center px-5">
+        <Text className="text-xl text-white font-semibold">
+          Niečo na inšpiráciu:
+        </Text>
+        <View className="flex-row flex-wrap justify-center max-w-sm">
+          <View className="w-1/2 p-2">
+            <ReccomendedPromptCard prompt="„Čo som kúpil včera“" color="pink" />
+          </View>
+          <View className="w-1/2 p-2">
+            <ReccomendedPromptCard
+              prompt="“Koľko som minul na topánky minulý rok”"
+              color="green"
+            />
+          </View>
+          <View className="w-1/2 p-2">
+            <ReccomendedPromptCard prompt="„Mám psa?“" color="blue" />
+          </View>
+          <View className="w-1/2 p-2">
+            <ReccomendedPromptCard prompt="Block my card" color="red" />
+          </View>
+        </View>
       </View>
 
-      <KeyboardAwareScrollView
-        className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
-        enableOnAndroid={true}
-        keyboardShouldPersistTaps="handled"
-        extraScrollHeight={150}
-      >
-        <View className="flex-1 justify-end pb-20 px-5">
+      {/* SearchBar with keyboard awareness - positioned absolutely at bottom */}
+      <View className="absolute bottom-20 left-0 right-0 mx-5">
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          keyboardShouldPersistTaps="handled"
+          extraScrollHeight={150}
+        >
           <View className="bg-accent rounded-lg py-3.5 flex flex-row justify-center items-center">
             <SearchBar
-              placeholder="Type your message..."
+              placeholder="Zadaj svoju správu..."
               value={promptValue}
               onChangeText={setPromptValue}
             />
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 };

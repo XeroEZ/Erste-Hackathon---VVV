@@ -41,7 +41,7 @@ const ReccomendedPromptCard = ({
 
   return (
     <TouchableOpacity
-      className={`${getColorClass()} p-4 rounded-xl min-h-[100px] justify-center items-center mx-2 my-2 shadow-lg`}
+      className={`${getColorClass()} p-4 rounded-xl min-h-[100px] justify-center items-center mx-2 my-2  border border-stroke`}
       onPress={handlePress}
       activeOpacity={0.8}
     >
