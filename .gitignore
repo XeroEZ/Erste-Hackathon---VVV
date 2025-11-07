@@ -5,3 +5,7 @@ __pycache__/*
 *.jpg
 *.jpeg
 venv/
+__pycache__/
+*.pyc
+__pycache__/
+*.pyc
