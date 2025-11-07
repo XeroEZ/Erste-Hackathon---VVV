@@ -27,7 +27,7 @@ def OtazkaNaGeminiBasic(otazka) -> str:
 
 
 def main():
-    print("Vitaj v hre Akinator!")
+    print("Vitaj v komunikacije s Gemini")
     # spýtaj sa používateľa na odpoveď
     user_input = input("Zadaj svoju otazku?")
     # volanie tvojej funkcie AkinatorHra s parametrom
