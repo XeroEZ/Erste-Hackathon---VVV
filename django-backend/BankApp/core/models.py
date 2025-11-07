@@ -59,8 +59,8 @@ class StoreUnit(models.Model):
 
 class Receipt(models.Model):
     """Pokladničný bločok"""
-    receipt_id = models.AutoField(primary_key=True)
-    fs_receipt_id = models.CharField(max_length=100, unique=True)  # Pôvodné ID z CSV
+    receipt_id = models.AutoField(primary_key=True, null=False)
+    fs_receipt_id = models.CharField(max_length=100, unique=True, default='TEMP_ID' )  # Pôvodné ID z CSV
     issue_date = models.DateTimeField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='receipts')  # ZMENENÉ
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)

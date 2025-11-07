@@ -7,8 +7,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes
+
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -27,8 +31,8 @@ def register(request):
     user = User.objects.create_user(username=username, password=password)
     return Response({"message": f"Používateľ '{user.username}' bol vytvorený."}, status=201)
 
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
     username = request.data.get('username')
     password = request.data.get('password')
