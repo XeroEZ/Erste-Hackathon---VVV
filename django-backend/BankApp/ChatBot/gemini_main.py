@@ -1,5 +1,8 @@
 from . import geminiKey
 from .markets import StockPrice
+from .markets import ComodityPrice
+from .markets import CryptoPrice
+
 
 def OtazkaNaGeminiBasic(prompt_text) -> str:
 
@@ -24,25 +27,26 @@ def OtazkaNaGeminiBasic(prompt_text) -> str:
 
 def OtazkaUzivatela(OtazkaUzivatela):
 
-    prompt_text_for_split = ("Si klasifikačný nástroj. Tvojou jedinou úlohou je určiť, do ktorej z troch kategórií patrí nasledujúca otázka od používateľa."
-    "\n1. **Stocko (Akcie/Cenné papiere):** Otázka sa týka ceny akcií konkrétnej spoločnosti (napr. Tesla, Apple, Kofola, Microsoft, ČEZ), indexov (S&P 500, NASDAQ, DAX), burzových fondov (ETF), dlhopisov, alebo iných cenných papierov kótovaných na burze."
-    "\n2. **Komodity:** Otázka sa týka ceny alebo informácií o fyzických surovinách a komoditách (napr. Zlato, Striebro, Ropa, Zemný plyn, Pšenica, Káva, Meď, Drevo, Uhlie)."
-    "\n3. **Iné:** Otázka nespadá pod kategóriu Stocko ani Komodity (napr. Kryptomeny, Makroekonomické dáta, História, Počasie, Šport, atď.)."
-    "\n**Tvoja odpoveď MUSÍ byť len jedno slovo z nasledovného zoznamu: 'Stocko', 'Komodity' alebo 'Iné'.** Žiadny iný text, vysvetlenie, alebo interpunkcia nie je povolená."
-    f"\n**Otázka na klasifikáciu:** \"{OtazkaUzivatela}\""
-        )
+    prompt_text_for_split = (
+        "Si klasifikačný nástroj. Tvojou jedinou úlohou je určiť, do ktorej z kategórií patrí nasledujúca otázka."
+        "\n1. **Stocko (Akcie/Cenné papiere):** otázky o cenách akcií, indexov, ETF, dlhopisov."
+        "\n2. **Komodity:** otázky o fyzických komoditách (zlato, ropa, pšenica...)."
+        "\n3. **Krypto:** otázky o kryptomenách (Bitcoin, Ethereum, Solana, Dogecoin...)."
+        "\n4. **Iné:** všetko ostatné."
+        "\n**Odpoveď musí byť len jedno slovo: 'Stocko', 'Komodity', 'Krypto' alebo 'Iné'.**"
+        f"\nOtázka: \"{OtazkaUzivatela}\""
+    )
 
     split = OtazkaNaGeminiBasic(prompt_text_for_split)
-    #print(f"Split:{split}")
+
     if "Stock" in split:
-        print("Stock")
         return Stock(OtazkaUzivatela)
     elif "Komodity" in split:
-
-        print("k")
         return Comodity(OtazkaUzivatela)
+    elif "Krypto" in split:
+        return Crypto(OtazkaUzivatela)
     else:
-        print("Else")
+        return "Toto nie je otázka o trhoch."
 
 def Stock(OtazkaUzivatela):
     prompt_text_for_split = (f"Rozdel otazku uzivatela na Nazov stock a medzinarodnu skratku stock. A odpis mi 'Nazov,Skratku'. \nOtazka uzivatela: {OtazkaUzivatela}"
@@ -53,8 +57,6 @@ def Stock(OtazkaUzivatela):
 
 
     return StockPrice.zobraz_cenu(Nazov,symbol)
-
-from .markets import ComodityPrice
 
 def Comodity(OtazkaUzivatela):
     prompt_text_for_split = (
@@ -74,6 +76,25 @@ def Comodity(OtazkaUzivatela):
         return ComodityPrice.cena_komodity(api_nazov)
     except Exception as e:
         return f"Nepodarilo sa spracovať odpoveď AI: {resp} ({e})"
+
+def Crypto(OtazkaUzivatela):
+    prompt_text_for_split = (
+        "Rozdel otázku používateľa na názov kryptomeny a jej symbol používaný na Binance (napr. BTC, ETH, SOL, BNB, DOGE). "
+        "Odpíš vo formáte 'Nazov,Symbol'. Ak kryptomena nie je podporovaná, odpíš presne 'neznamy'.\n"
+        f"Otázka používateľa: {OtazkaUzivatela}"
+    )
+
+    resp = OtazkaNaGeminiBasic(prompt_text_for_split).strip()
+
+    if "neznamy" in resp.lower():
+        return "K tejto kryptomene nemám prístup."
+
+    try:
+        nazov, symbol = [s.strip() for s in resp.split(",")]
+        return CryptoPrice.cena_kryptomeny(symbol)
+    except Exception as e:
+        return f"Nepodarilo sa spracovať odpoveď AI: {resp} ({e})"
+
 
 def main():
     print("Vitaj v komunikacije s Gemini")
