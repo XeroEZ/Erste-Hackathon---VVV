@@ -99,14 +99,24 @@ WSGI_APPLICATION = 'BankApp.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'vvv_db_vxj0',
+#         'USER': 'tester1',
+#         'PASSWORD': 'D9UmJT7tMz418GQGnUmcwIVv6za43UR4',
+#         'HOST': 'dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vvv_db_vxj0',
-        'USER': 'tester1',
-        'PASSWORD': 'D9UmJT7tMz418GQGnUmcwIVv6za43UR4',
-        'HOST': 'dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com',
-        'PORT': '5432',
+        'NAME': 'django_db',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST': 'db',  # Must match service name in docker-compose
+        'PORT': 5432,
     }
 }
 
