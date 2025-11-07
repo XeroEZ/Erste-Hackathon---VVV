@@ -15,14 +15,16 @@ class AccountViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-    @action(detail=True, methods=['get'])
-    def transactions(self, request, pk=None):
-        account = self.get_object()
-        transactions = account.transactions.all()
-        serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+    # @action(detail=True, methods=['get'])
+    # def transactions(self, request, pk=None):
+    #     account = self.get_object()
+    #     transactions = account.transactions.all()
+    #     serializer = TransactionSerializer(transactions, many=True)
+    #     return Response(serializer.data)
 
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 # TODO stale byt odhlaseny po ukonceni sessionu
