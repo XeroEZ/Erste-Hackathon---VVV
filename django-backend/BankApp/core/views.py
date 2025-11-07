@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import ChatSession, ChatMessage
 from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework.permissions import AllowAny  
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Product

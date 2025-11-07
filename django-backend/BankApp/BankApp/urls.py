@@ -15,5 +15,4 @@ urlpatterns = [
     # API aplikácie
     path('api/banking/', include('Banking.urls')),
     path('api/core/', include('core.urls')),
-    # path('api/', include('Banking.urls'))
 ]
