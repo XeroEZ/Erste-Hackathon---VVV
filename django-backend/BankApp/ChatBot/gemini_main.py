@@ -5,14 +5,14 @@ def OtazkaNaGeminiBasic(prompt_text) -> str:
 
     try:
         client = geminiKey.ClientApi()
-        
+
         config = geminiKey.types.GenerateContentConfig(
             temperature=0.0
         )
 
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash", 
+            model="gemini-2.5-flash",
             contents=prompt_text,
             config=config,
         )
@@ -54,14 +54,26 @@ def Stock(OtazkaUzivatela):
 
     return StockPrice.zobraz_cenu(Nazov,symbol)
 
+from .markets import ComodityPrice
+
 def Comodity(OtazkaUzivatela):
-    
+    prompt_text_for_split = (
+        "Rozdel otázku používateľa na názov komodity a jej API názov podľa služieb API Ninjas "
+        "(napr. 'platinum', 'micro_silver', 'oat', 'micro_gold', 'feeder_cattle', 'rough_rice', 'class_3_milk'). "
+        "Odpíš mi vo formáte 'Nazov,API_nazov'. Ak komodita nie je medzi dostupnými, odpíš presne 'neznamy'.\n"
+        f"Otázka používateľa: {OtazkaUzivatela}"
+    )
 
+    resp = OtazkaNaGeminiBasic(prompt_text_for_split).strip()
 
+    if "neznamy" in resp.lower():
+        return "K tejto komodite nemám prístup. Pretoze studenti ktori vyvijali tento system nemaju peniaze na drahe API."
 
-
-
-
+    try:
+        nazov, api_nazov = [s.strip() for s in resp.split(",")]
+        return ComodityPrice.cena_komodity(api_nazov)
+    except Exception as e:
+        return f"Nepodarilo sa spracovať odpoveď AI: {resp} ({e})"
 
 def main():
     print("Vitaj v komunikacije s Gemini")
@@ -69,7 +81,7 @@ def main():
 
     user_input = input("Zadaj svoju otazku?")
 
-    
+
     # volanie tvojej funkcie AkinatorHra s parametrom
     result = OtazkaUzivatela(user_input)
     # vypíš výsledok
