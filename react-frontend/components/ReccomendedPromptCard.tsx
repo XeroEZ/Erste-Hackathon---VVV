@@ -45,7 +45,7 @@ const ReccomendedPromptCard = ({
       onPress={handlePress}
       activeOpacity={0.8}
     >
-      <Text className="text-white text-center font-semibold text-sm leading-5">
+      <Text className="text-white text-center font-semibold text-xs leading-5">
         {prompt}
       </Text>
     </TouchableOpacity>

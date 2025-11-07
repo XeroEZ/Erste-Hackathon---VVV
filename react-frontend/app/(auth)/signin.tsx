@@ -152,61 +152,61 @@ const signin = () => {
    * Handle button press animation, validation, and API call
    */
   const handleSignIn = async () => {
-    // // Button press animation - scale down then back up
-    // Animated.sequence([
-    //   Animated.timing(buttonScaleAnim, {
-    //     toValue: 0.95,
-    //     duration: 100,
-    //     useNativeDriver: true,
-    //   }),
-    //   Animated.timing(buttonScaleAnim, {
-    //     toValue: 1,
-    //     duration: 100,
-    //     useNativeDriver: true,
-    //   }),
-    // ]).start();
+    // Button press animation - scale down then back up
+    Animated.sequence([
+      Animated.timing(buttonScaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(buttonScaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
 
-    // // Clear previous errors
-    // setErrors({ userId: "", password: "" });
+    // Clear previous errors
+    setErrors({ userId: "", password: "" });
 
-    // // Validate inputs
-    // if (!validateInputs()) {
-    //   Alert.alert(
-    //     "Chyba overenia",
-    //     "Prosím, vyplňte všetky požadované polia správne."
-    //   );
-    //   return;
-    // }
+    // Validate inputs
+    if (!validateInputs()) {
+      Alert.alert(
+        "Chyba overenia",
+        "Prosím, vyplňte všetky požadované polia správne."
+      );
+      return;
+    }
 
-    // // Set loading state
-    // setIsLoading(true);
+    // Set loading state
+    setIsLoading(true);
 
-    // try {
-    //   // Call backend API for authentication using fetch
-    //   console.log("Attempting login with:", {
-    //     username: userId,
-    //     password: password,
-    //   });
+    try {
+      // Call backend API for authentication using fetch
+      console.log("Attempting login with:", {
+        username: userId,
+        password: password,
+      });
 
-    //   const response = await authenticateUser(userId, password);
+      const response = await authenticateUser(userId, password);
 
-    //   console.log("Login successful:", response);
+      console.log("Login successful:", response);
 
-    //   // TODO: Store authentication token if provided by backend
-    //   // const token = response.token;
-    //   // await AsyncStorage.setItem('authToken', token);
+      // TODO: Store authentication token if provided by backend
+      // const token = response.token;
+      // await AsyncStorage.setItem('authToken', token);
 
-    //   // Navigate to main app on successful authentication
-    //   router.replace("/(tabs)");
-    // } catch (error: any) {
-    //   console.error("Login failed:", error.message);
+      // Navigate to main app on successful authentication
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      console.error("Login failed:", error.message);
 
-    //   // Show error message to user
-    //   Alert.alert("Prihlásenie neúspešné", error.message, [{ text: "OK" }]);
-    // } finally {
-    //   // Always reset loading state
-    //   setIsLoading(false);
-    // }
+      // Show error message to user
+      Alert.alert("Prihlásenie neúspešné", error.message, [{ text: "OK" }]);
+    } finally {
+      // Always reset loading state
+      setIsLoading(false);
+    }
     router.replace("/(tabs)");
   };
 

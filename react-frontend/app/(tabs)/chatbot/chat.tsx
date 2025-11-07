@@ -34,7 +34,7 @@ const chat = () => {
             <ReccomendedPromptCard prompt="„Mám psa?“" color="blue" />
           </View>
           <View className="w-1/2 p-2">
-            <ReccomendedPromptCard prompt="Block my card" color="red" />
+            <ReccomendedPromptCard prompt="Výdavky za január" color="red" />
           </View>
         </View>
       </View>

@@ -1,4 +1,16 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput, ActivityIndicator, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  TextInput,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import { images } from "@/constants/images";
 
@@ -48,17 +60,26 @@ const Settings = () => {
       // Tip: po úspechu môžeš odhlásiť používateľa a presmerovať na Sign in.
     } catch (e: any) {
       setSubmitting(false);
-      const msg = typeof e?.message === "string" ? e.message : "Zmena hesla zlyhala.";
+      const msg =
+        typeof e?.message === "string" ? e.message : "Zmena hesla zlyhala.";
       Alert.alert("Chyba", msg);
     }
   };
 
   return (
     <View className="flex-1 bg-black">
-      <Image source={images.bg} className="absolute w-full h-full z-0" resizeMode="cover" />
+      <Image
+        source={images.bg}
+        className="absolute w-full h-full z-0"
+        resizeMode="cover"
+      />
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 22, paddingTop: 40, paddingBottom: 50 }}
+        contentContainerStyle={{
+          paddingHorizontal: 22,
+          paddingTop: 40,
+          paddingBottom: 50,
+        }}
         className="flex-1"
       >
         {/* Title */}
@@ -67,16 +88,29 @@ const Settings = () => {
         </View>
 
         {/* Profile card */}
-        <View className="bg-white/10 rounded-3xl p-5 mb-8">
+        <View
+          className="bg-box rounded-3xl p-5 mb-8 border border-stroke"
+          style={{ borderWidth: 0.5 }}
+        >
           <View className="flex-row items-center">
             <View className="w-16 h-16 rounded-full bg-white/15 items-center justify-center mr-4">
-              <Image source={userIcon} className="w-8 h-8" resizeMode="contain" />
+              <Image
+                source={userIcon}
+                className="w-8 h-8"
+                resizeMode="contain"
+              />
             </View>
             <View className="flex-1">
               <View className="flex-row items-center">
-                <Text className="text-white text-xl font-semibold">Janko Hraško</Text>
+                <Text className="text-white text-xl font-semibold">
+                  Janko Hraško
+                </Text>
                 <TouchableOpacity className="ml-3 px-2 py-1">
-                  <Image source={editIcon} className="w-5 h-5" resizeMode="contain" />
+                  <Image
+                    source={editIcon}
+                    className="w-5 h-5"
+                    resizeMode="contain"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -100,8 +134,17 @@ const Settings = () => {
         <View>
           <SettingRow icon={brightnessIcon} title="Motív" subtitle="tmavý" />
           <SettingRow icon={languageIcon} title="Jazyk" subtitle="slovenčina" />
-          <SettingRow icon={lockOpenIcon} title="Povolenia" subtitle="v poriadku" />
-          <SettingRow icon={supportIcon} title="Podpora" subtitle="kontaktujte nás" last />
+          <SettingRow
+            icon={lockOpenIcon}
+            title="Povolenia"
+            subtitle="v poriadku"
+          />
+          <SettingRow
+            icon={supportIcon}
+            title="Podpora"
+            subtitle="kontaktujte nás"
+            last
+          />
         </View>
 
         {/* Sign out */}
@@ -116,17 +159,29 @@ const Settings = () => {
               resizeMode="contain"
               style={{ tintColor: "#ef4444" }}
             />
-            <Text className="text-red-500 font-semibold text-lg">Odhlásiť sa</Text>
+            <Text className="text-red-500 font-semibold text-lg">
+              Odhlásiť sa
+            </Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
 
       {/* Change password modal */}
-      <Modal visible={pwdModal} animationType="slide" transparent onRequestClose={closePwdModal}>
+      <Modal
+        visible={pwdModal}
+        animationType="slide"
+        transparent
+        onRequestClose={closePwdModal}
+      >
         <View className="flex-1 bg-black/60 items-center justify-end">
-          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="w-full">
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            className="w-full"
+          >
             <View className="bg-neutral-900 rounded-t-3xl p-6">
-              <Text className="text-white text-xl font-semibold mb-4">Zmeniť heslo</Text>
+              <Text className="text-white text-xl font-semibold mb-4">
+                Zmeniť heslo
+              </Text>
 
               <Text className="text-white/70 mb-2">Aktuálne heslo</Text>
               <TextInput
@@ -148,7 +203,9 @@ const Settings = () => {
                 className="bg-white/10 rounded-xl px-4 py-3 text-white mb-4"
               />
 
-              <Text className="text-white/70 mb-2">Potvrdenie nového hesla</Text>
+              <Text className="text-white/70 mb-2">
+                Potvrdenie nového hesla
+              </Text>
               <TextInput
                 value={confirmPwd}
                 onChangeText={setConfirmPwd}
@@ -159,11 +216,23 @@ const Settings = () => {
               />
 
               <View className="flex-row">
-                <TouchableOpacity onPress={closePwdModal} disabled={submitting} className="flex-1 mr-3 bg-white/10 rounded-xl py-3 items-center">
+                <TouchableOpacity
+                  onPress={closePwdModal}
+                  disabled={submitting}
+                  className="flex-1 mr-3 bg-white/10 rounded-xl py-3 items-center"
+                >
                   <Text className="text-white">Zrušiť</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={onSubmitChangePwd} disabled={submitting} className="flex-1 bg-white/20 rounded-xl py-3 items-center">
-                  {submitting ? <ActivityIndicator color="#fff" /> : <Text className="text-white font-semibold">Uložiť</Text>}
+                <TouchableOpacity
+                  onPress={onSubmitChangePwd}
+                  disabled={submitting}
+                  className="flex-1 bg-white/20 rounded-xl py-3 items-center"
+                >
+                  {submitting ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text className="text-white font-semibold">Uložiť</Text>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
@@ -200,14 +269,19 @@ type RowProps = { icon: any; title: string; subtitle?: string; last?: boolean };
 const SettingRow = ({ icon, title, subtitle, last }: RowProps) => (
   <TouchableOpacity
     activeOpacity={0.6}
-    className={`flex-row items-center rounded-2xl bg-white/10 px-5 py-4 mb-6 ${last ? "mb-0" : ""}`}
+    className={`flex-row items-center rounded-2xl bg-box px-5 py-4 mb-6 border border-stroke ${
+      last ? "mb-0" : ""
+    }`}
+    style={{ borderWidth: 0.5 }}
   >
     <View className="w-9 h-9 rounded-full bg-white/15 items-center justify-center mr-4 overflow-hidden">
       <Image source={icon} className="w-6 h-6" resizeMode="contain" />
     </View>
     <View className="flex-1">
       <Text className="text-white text-base font-medium">{title}</Text>
-      {subtitle ? <Text className="text-white/50 text-xs mt-0.5">{subtitle}</Text> : null}
+      {subtitle ? (
+        <Text className="text-white/50 text-xs mt-0.5">{subtitle}</Text>
+      ) : null}
     </View>
   </TouchableOpacity>
 );
