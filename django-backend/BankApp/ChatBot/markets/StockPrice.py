@@ -29,6 +29,6 @@ def zobraz_cenu(nazov: str, symbol: str):
 
 
 # 🔹 Príklad použitia:
-#print(zobraz_cenu("Apple", "AAPL"))
+print(zobraz_cenu("Zlato", "OIS"))
 #print(zobraz_cenu("NVIDIA", "NVDA"))
 

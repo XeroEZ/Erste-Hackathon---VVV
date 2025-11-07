@@ -37,7 +37,9 @@ def OtazkaUzivatela(OtazkaUzivatela):
         print("Stock")
         return StockPrice(OtazkaUzivatela)
     elif "Komodity" in split:
+
         print("k")
+        return StockPrice(OtazkaUzivatela)
     else:
         print("Else")
 
@@ -45,7 +47,7 @@ def StockPrice(OtazkaUzivatela):
     prompt_text_for_split = (f"Rozdel otazku uzivatela na Nazov stock a medzinarodnu skratku stock. A odpis mi 'Nazov,Skratku'. \nOtazka uzivatela: {OtazkaUzivatela}"
         )
     resp = OtazkaNaGeminiBasic(prompt_text_for_split)
-    
+
     return resp
 
 
