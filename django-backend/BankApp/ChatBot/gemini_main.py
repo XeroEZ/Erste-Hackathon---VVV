@@ -23,8 +23,12 @@ def OtazkaNaGeminiBasic(prompt_text) -> str:
 
 def OtazkaUzivatela(OtazkaUzivatela):
 
-    prompt_text_for_split = ("Potrebujem rozhodnut co odomna uzivatel ocakava. Ked jeho otazka sa bude tikat Stock tak mi odpis 'Stock', ked sa bude tikat komodit napis 'Komodity' a ked sa bude tikat niecoho ineho odpis 'Ine'"
-            f"\nOtazka uzivatela {OtazkaUzivatela}"
+    prompt_text_for_split = ("Si klasifikačný nástroj. Tvojou jedinou úlohou je určiť, do ktorej z troch kategórií patrí nasledujúca otázka od používateľa."
+    "\n1. **Stocko (Akcie/Cenné papiere):** Otázka sa týka ceny akcií konkrétnej spoločnosti (napr. Tesla, Apple, Kofola, Microsoft, ČEZ), indexov (S&P 500, NASDAQ, DAX), burzových fondov (ETF), dlhopisov, alebo iných cenných papierov kótovaných na burze."
+    "\n2. **Komodity:** Otázka sa týka ceny alebo informácií o fyzických surovinách a komoditách (napr. Zlato, Striebro, Ropa, Zemný plyn, Pšenica, Káva, Meď, Drevo, Uhlie)."
+    "\n3. **Iné:** Otázka nespadá pod kategóriu Stocko ani Komodity (napr. Kryptomeny, Makroekonomické dáta, História, Počasie, Šport, atď.)."
+    "\n**Tvoja odpoveď MUSÍ byť len jedno slovo z nasledovného zoznamu: 'Stocko', 'Komodity' alebo 'Iné'.** Žiadny iný text, vysvetlenie, alebo interpunkcia nie je povolená."
+    f"\n**Otázka na klasifikáciu:** \"{OtazkaUzivatela}\""
         )
 
     split = OtazkaNaGeminiBasic(prompt_text_for_split)
@@ -41,6 +45,7 @@ def StockPrice(OtazkaUzivatela):
     prompt_text_for_split = (f"Rozdel otazku uzivatela na Nazov stock a medzinarodnu skratku stock. A odpis mi 'Nazov,Skratku'. \nOtazka uzivatela: {OtazkaUzivatela}"
         )
     resp = OtazkaNaGeminiBasic(prompt_text_for_split)
+    
     return resp
 
 
