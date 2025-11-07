@@ -1,4 +1,5 @@
 from . import geminiKey
+from .markets import StockPrice
 
 def OtazkaNaGeminiBasic(prompt_text) -> str:
 
@@ -35,20 +36,27 @@ def OtazkaUzivatela(OtazkaUzivatela):
     #print(f"Split:{split}")
     if "Stock" in split:
         print("Stock")
-        return StockPrice(OtazkaUzivatela)
+        return Stock(OtazkaUzivatela)
     elif "Komodity" in split:
 
         print("k")
-        return StockPrice(OtazkaUzivatela)
+        return Comodity(OtazkaUzivatela)
     else:
         print("Else")
 
-def StockPrice(OtazkaUzivatela):
+def Stock(OtazkaUzivatela):
     prompt_text_for_split = (f"Rozdel otazku uzivatela na Nazov stock a medzinarodnu skratku stock. A odpis mi 'Nazov,Skratku'. \nOtazka uzivatela: {OtazkaUzivatela}"
         )
     resp = OtazkaNaGeminiBasic(prompt_text_for_split)
+    print(resp)
+    Nazov, symbol = resp.split(",")
 
-    return resp
+
+    return StockPrice.zobraz_cenu(Nazov,symbol)
+
+def Comodity(OtazkaUzivatela):
+    
+
 
 
 
