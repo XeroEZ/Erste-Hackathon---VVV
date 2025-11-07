@@ -37,9 +37,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'BankApp', 
-    'core', 
+
+    'core',          # your core app
+    'Banking',       # must match folder name exactlyINSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
 
 
 MIDDLEWARE = [
@@ -50,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'BankApp.urls'
@@ -70,7 +85,12 @@ TEMPLATES = [
     },
 ]
 
-
+# Allow frontend to call backend
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:19006",  # Expo web interface
+    "http://localhost:19000",  # Expo dev server
+    "http://127.0.0.1:19006",
+]
 
 WSGI_APPLICATION = 'BankApp.wsgi.application'
 
@@ -79,23 +99,39 @@ WSGI_APPLICATION = 'BankApp.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'vvv_db_vxj0',
+#         'USER': 'tester1',
+#         'PASSWORD': 'D9UmJT7tMz418GQGnUmcwIVv6za43UR4',
+#         'HOST': 'dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vvv_db_vxj0',
-        'USER': 'tester1',
-        'PASSWORD': 'D9UmJT7tMz418GQGnUmcwIVv6za43UR4',
-        'HOST': 'dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com',
-        'PORT': '5432',
+        'NAME': 'django_db',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST': 'db',  # Must match service name in docker-compose
+        'PORT': 5432,
     }
 }
-
 
 # TEST python manage.py dbshell
 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,3 +170,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# TODO vyhodit v production
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True

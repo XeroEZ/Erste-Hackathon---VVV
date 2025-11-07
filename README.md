@@ -18,3 +18,10 @@ Pre backend
 	-> git push --set-upstream origin backend
 pre android
 	-> git push --set-upstream origin android
+
+
+pre nainstalovanie vsetkych potrebnych suborov treba spustit prikaz v terminaly
+pip install requirements.txt
+
+nasledne spustenie backendu 
+python3 manage.py runserver
