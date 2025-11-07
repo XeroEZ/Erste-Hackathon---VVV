@@ -11,6 +11,6 @@ router.register(r'transactions', TransactionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('register/', views_auth.register_user),
-    path('login/', views_auth.login_user)
+    path('register/', views_auth.register),
+    path('login/', views_auth.login)
 ]

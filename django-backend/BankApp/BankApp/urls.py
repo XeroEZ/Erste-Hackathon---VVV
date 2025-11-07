@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
 
     # JWT autentifikácia
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -17,3 +18,7 @@ urlpatterns = [
     path('api/banking/', include('Banking.urls')),
     path('api/core/', include('core.urls')),
 ]
+=======
+    path('api/', include('Banking.urls'))
+]
+>>>>>>> fd9e7b8f571011a4d79ce3b6ece6b9a257f50c66
