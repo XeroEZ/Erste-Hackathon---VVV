@@ -54,3 +54,38 @@ def remove_plural_duplicates(categories):
                     break
     
     return categories - to_remove
+
+from rapidfuzz import fuzz
+
+def fuzzmatch(input1: str, input2: str) -> float:
+    best_similarity = fuzz.token_sort_ratio(input1, input2.title())
+    return best_similarity
+
+def Replace_multipla_categori(InputBlocky, Categoris):
+    for blocek in InputBlocky:
+
+        for polozka in blocek["polozky"]:
+            bestmatch = {}
+            #print(polozka["kategoria"])
+            if polozka["kategoria"] is None:
+                polozka["shortCategoris"] = None
+                continue
+
+            for cat in Categoris:
+
+                percenta = fuzzmatch(polozka["kategoria"], cat)
+                if not bestmatch or (bestmatch and bestmatch["percent"] < percenta):
+                    bestmatch["percent"] = percenta
+                    bestmatch["category"] = cat
+
+            polozka["shortCategoris"] = bestmatch["category"]
+
+    return InputBlocky
+
+def delete_useless_categories
+    
+
+        
+
+
+#def filtrovanie_kategorii_z_blockou(blocky):

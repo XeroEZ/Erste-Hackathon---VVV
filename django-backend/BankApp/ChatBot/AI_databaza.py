@@ -4,17 +4,24 @@ import json
 import os
 
 
+
+
+
+
 def main():
     print("Vitaj v komunikacije s Gemini")
     # spýtaj sa používateľa na odpoveď
     cely_json_string = funkcie.LoadUserDataJson()
+    
     # Získanie unikátnych kategórií
-    categories = funkcie.get_categories_list(cely_json_string)
-    #print(categories)
+    categories_skratka = funkcie.get_categories_list(cely_json_string)
+    #print(categories_skratka)
     # Výpis výsledkov
 
-    print(f"\nCelkový počet kategórií: {len(categories)}")
-    #return
+    blocky = funkcie.Replace_multipla_categori(cely_json_string["povodne_ucetnicky"],categories_skratka)
+    #print(json.dumps(blocky, indent=4, ensure_ascii=False))
+    print(f"\nCelkový počet kategórií: {len(categories_skratka)}")
+    return
 
 
     #print(cely_json_string)
@@ -45,7 +52,7 @@ def main():
 
     result = gemini_main.OtazkaNaGeminiBasic(prompt_na_filtrovanie_kategorii)
     # vypíš výsledok
-    print("Výsledok:", result)
+    print("Výsledok: ", result)
 
 
 
