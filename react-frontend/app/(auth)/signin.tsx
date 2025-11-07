@@ -7,7 +7,7 @@ import {
   Alert,
   Animated,
   Easing,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { images } from "@/constants/images";
@@ -90,14 +90,14 @@ const signin = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch('http://localhost:8000/api/banking/login/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/banking/login/", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: username,
-          password: password
+          password: password,
         }),
         signal: controller.signal, // For timeout functionality
       });
@@ -108,12 +108,15 @@ const signin = () => {
       // Check if response is ok (status 200-299)
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const message = errorData.message || errorData.error || 'Neplatné prihlasovacie údaje';
+        const message =
+          errorData.message ||
+          errorData.error ||
+          "Neplatné prihlasovacie údaje";
 
         if (response.status === 401 || response.status === 400) {
-          throw new Error('Nesprávne používateľské meno alebo heslo');
+          throw new Error("Nesprávne používateľské meno alebo heslo");
         } else if (response.status === 500) {
-          throw new Error('Chyba servera. Skúste to neskôr.');
+          throw new Error("Chyba servera. Skúste to neskôr.");
         } else {
           throw new Error(message);
         }
@@ -122,21 +125,25 @@ const signin = () => {
       // Parse and return the response data
       const data = await response.json();
       return data;
-
     } catch (error: any) {
       // Handle different types of errors
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         // Request was aborted due to timeout
-        throw new Error('Požiadavka trvala príliš dlho. Skúste to znovu.');
-      } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+        throw new Error("Požiadavka trvala príliš dlho. Skúste to znovu.");
+      } else if (
+        error.message.includes("Network") ||
+        error.message.includes("fetch")
+      ) {
         // Network error
-        throw new Error('Nemožno sa pripojiť k serveru. Skontrolujte internetové pripojenie.');
+        throw new Error(
+          "Nemožno sa pripojiť k serveru. Skontrolujte internetové pripojenie."
+        );
       } else if (error.message) {
         // Custom error message from above
         throw error;
       } else {
         // Other unexpected errors
-        throw new Error('Nastala neočakávaná chyba. Skúste to znovu.');
+        throw new Error("Nastala neočakávaná chyba. Skúste to znovu.");
       }
     }
   };
@@ -145,67 +152,72 @@ const signin = () => {
    * Handle button press animation, validation, and API call
    */
   const handleSignIn = async () => {
-    // Button press animation - scale down then back up
-    Animated.sequence([
-      Animated.timing(buttonScaleAnim, {
-        toValue: 0.95,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(buttonScaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    // // Button press animation - scale down then back up
+    // Animated.sequence([
+    //   Animated.timing(buttonScaleAnim, {
+    //     toValue: 0.95,
+    //     duration: 100,
+    //     useNativeDriver: true,
+    //   }),
+    //   Animated.timing(buttonScaleAnim, {
+    //     toValue: 1,
+    //     duration: 100,
+    //     useNativeDriver: true,
+    //   }),
+    // ]).start();
 
-    // Clear previous errors
-    setErrors({ userId: "", password: "" });
+    // // Clear previous errors
+    // setErrors({ userId: "", password: "" });
 
-    // Validate inputs
-    if (!validateInputs()) {
-      Alert.alert("Chyba overenia", "Prosím, vyplňte všetky požadované polia správne.");
-      return;
-    }
+    // // Validate inputs
+    // if (!validateInputs()) {
+    //   Alert.alert(
+    //     "Chyba overenia",
+    //     "Prosím, vyplňte všetky požadované polia správne."
+    //   );
+    //   return;
+    // }
 
-    // Set loading state
-    setIsLoading(true);
+    // // Set loading state
+    // setIsLoading(true);
 
-    try {
-      // Call backend API for authentication using fetch
-      console.log("Attempting login with:", { username: userId, password: password });
+    // try {
+    //   // Call backend API for authentication using fetch
+    //   console.log("Attempting login with:", {
+    //     username: userId,
+    //     password: password,
+    //   });
 
-      const response = await authenticateUser(userId, password);
+    //   const response = await authenticateUser(userId, password);
 
-      console.log("Login successful:", response);
+    //   console.log("Login successful:", response);
 
-      // TODO: Store authentication token if provided by backend
-      // const token = response.token;
-      // await AsyncStorage.setItem('authToken', token);
+    //   // TODO: Store authentication token if provided by backend
+    //   // const token = response.token;
+    //   // await AsyncStorage.setItem('authToken', token);
 
-      // Navigate to main app on successful authentication
-      router.replace("/(tabs)");
+    //   // Navigate to main app on successful authentication
+    //   router.replace("/(tabs)");
+    // } catch (error: any) {
+    //   console.error("Login failed:", error.message);
 
-    } catch (error: any) {
-      console.error("Login failed:", error.message);
-
-      // Show error message to user
-      Alert.alert(
-        "Prihlásenie neúspešné",
-        error.message,
-        [{ text: "OK" }]
-      );
-    } finally {
-      // Always reset loading state
-      setIsLoading(false);
-    }
+    //   // Show error message to user
+    //   Alert.alert("Prihlásenie neúspešné", error.message, [{ text: "OK" }]);
+    // } finally {
+    //   // Always reset loading state
+    //   setIsLoading(false);
+    // }
+    router.replace("/(tabs)");
   };
 
   /**
    * Handle forgot password action
    */
   const handleForgotPassword = () => {
-    Alert.alert("Zabudnuté heslo", "Funkcia na obnovenie hesla bude implementovaná.");
+    Alert.alert(
+      "Zabudnuté heslo",
+      "Funkcia na obnovenie hesla bude implementovaná."
+    );
   };
 
   /**
@@ -244,7 +256,7 @@ const signin = () => {
             className="text-white text-4xl font-bold text-center mb-20"
             style={{
               // Enhanced title styling with shadow/glow
-              textShadowColor: 'rgba(255, 255, 255, 0.3)',
+              textShadowColor: "rgba(255, 255, 255, 0.3)",
               textShadowOffset: { width: 0, height: 0 },
               textShadowRadius: 8,
               elevation: 5,
@@ -281,15 +293,19 @@ const signin = () => {
                 className="text-white text-base text-center pl-12 pr-6 py-5"
                 style={{
                   // Enhanced input styling with more opacity and animated border
-                  backgroundColor: 'rgba(107, 114, 128, 0.9)', // More opaque gray
+                  backgroundColor: "rgba(107, 114, 128, 0.9)", // More opaque gray
                   borderRadius: 25,
                   borderWidth: 2,
-                  borderColor: focusedField === 'userId' ? '#3B82F6' : 'rgba(147, 197, 253, 0.4)', // Light blue border, vibrant when focused
-                  shadowColor: focusedField === 'userId' ? '#3B82F6' : 'transparent',
+                  borderColor:
+                    focusedField === "userId"
+                      ? "#3B82F6"
+                      : "rgba(147, 197, 253, 0.4)", // Light blue border, vibrant when focused
+                  shadowColor:
+                    focusedField === "userId" ? "#3B82F6" : "transparent",
                   shadowOffset: { width: 0, height: 0 },
                   shadowOpacity: 0.3,
                   shadowRadius: 4,
-                  elevation: focusedField === 'userId' ? 3 : 0,
+                  elevation: focusedField === "userId" ? 3 : 0,
                 }}
                 value={userId}
                 onChangeText={setUserId}
@@ -298,13 +314,15 @@ const signin = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 editable={!isLoading} // Disable input when loading
-                onFocus={() => setFocusedField('userId')}
+                onFocus={() => setFocusedField("userId")}
                 onBlur={() => setFocusedField(null)}
               />
             </View>
             {/* Error message for User ID */}
             {errors.userId ? (
-              <Text className="text-red-400 text-xs mt-2 text-center">{errors.userId}</Text>
+              <Text className="text-red-400 text-xs mt-2 text-center">
+                {errors.userId}
+              </Text>
             ) : null}
           </View>
 
@@ -323,7 +341,7 @@ const signin = () => {
                 disabled={isLoading}
               >
                 <Text className="text-gray-300 text-lg">
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
                 </Text>
               </TouchableOpacity>
 
@@ -331,15 +349,19 @@ const signin = () => {
                 className="text-white text-base text-center pl-12 pr-12 py-5"
                 style={{
                   // Enhanced input styling with more opacity and animated border
-                  backgroundColor: 'rgba(107, 114, 128, 0.9)', // More opaque gray
+                  backgroundColor: "rgba(107, 114, 128, 0.9)", // More opaque gray
                   borderRadius: 25,
                   borderWidth: 2,
-                  borderColor: focusedField === 'password' ? '#3B82F6' : 'rgba(147, 197, 253, 0.4)', // Light blue border, vibrant when focused
-                  shadowColor: focusedField === 'password' ? '#3B82F6' : 'transparent',
+                  borderColor:
+                    focusedField === "password"
+                      ? "#3B82F6"
+                      : "rgba(147, 197, 253, 0.4)", // Light blue border, vibrant when focused
+                  shadowColor:
+                    focusedField === "password" ? "#3B82F6" : "transparent",
                   shadowOffset: { width: 0, height: 0 },
                   shadowOpacity: 0.3,
                   shadowRadius: 4,
-                  elevation: focusedField === 'password' ? 3 : 0,
+                  elevation: focusedField === "password" ? 3 : 0,
                 }}
                 value={password}
                 onChangeText={setPassword}
@@ -349,13 +371,15 @@ const signin = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 editable={!isLoading} // Disable input when loading
-                onFocus={() => setFocusedField('password')}
+                onFocus={() => setFocusedField("password")}
                 onBlur={() => setFocusedField(null)}
               />
             </View>
             {/* Error message for Password */}
             {errors.password ? (
-              <Text className="text-red-400 text-xs mt-2 text-center">{errors.password}</Text>
+              <Text className="text-red-400 text-xs mt-2 text-center">
+                {errors.password}
+              </Text>
             ) : null}
           </View>
 
@@ -369,9 +393,9 @@ const signin = () => {
               className="py-5 px-8"
               style={{
                 // Enhanced button styling with shadow and elevation
-                backgroundColor: isLoading ? '#94A3B8' : '#2563EB', // Gray when loading, blue when ready
+                backgroundColor: isLoading ? "#94A3B8" : "#2563EB", // Gray when loading, blue when ready
                 borderRadius: 25,
-                shadowColor: '#000',
+                shadowColor: "#000",
                 shadowOffset: { width: 0, height: 4 },
                 shadowOpacity: 0.3,
                 shadowRadius: 6,
@@ -399,8 +423,15 @@ const signin = () => {
 
           {/* Forgot password link with extra spacing */}
           <View className="mt-8 items-center">
-            <TouchableOpacity onPress={handleForgotPassword} disabled={isLoading}>
-              <Text className={`text-sm underline ${isLoading ? 'text-gray-500' : 'text-blue-300'}`}>
+            <TouchableOpacity
+              onPress={handleForgotPassword}
+              disabled={isLoading}
+            >
+              <Text
+                className={`text-sm underline ${
+                  isLoading ? "text-gray-500" : "text-blue-300"
+                }`}
+              >
                 Zabudli ste heslo?
               </Text>
             </TouchableOpacity>
