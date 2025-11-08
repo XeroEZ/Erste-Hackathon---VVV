@@ -18,6 +18,9 @@ from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Count
 from django.contrib.auth.models import User
 
+from .serializers import ChatRequestSerializer
+from ChatBot import geminiKey
+
 
 class ProductListView(APIView):
     permission_classes = [AllowAny]
@@ -492,3 +495,63 @@ def current_user(request):
     """
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Only logged-in users can chat
+def chat_response(request):
+    serializer = ChatRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
+
+    question = serializer.validateddata['question']
+    user = request.user
+
+    #  Find or create active chat session for this user
+    session,  = ChatSession.objects.get_or_create(user=user)
+
+    #  Save user message
+    ChatMessage.objects.create(
+        session=session,
+        sender='user',
+        message=question
+    )
+
+    #  Get Gemini response
+    try:
+        client = geminiKey.ClientApi()
+        prompt_text = (question)
+
+        config = geminiKey.types.GenerateContentConfig(
+            temperature=0.0,
+            tools=[  # Enable Google grounding
+                geminiKey.types.Tool(name="google_search", parameters={})
+            ]
+        )
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt_text,
+            config=config,
+        )
+        answer = response.text.strip()
+    except Exception as e:
+        answer = f"Nastala chyba pri volaní AI: {e}"
+
+    #  Save bot response
+    ChatMessage.objects.create(
+        session=session,
+        sender='bot',
+        message=answer
+    )
+
+    return Response({
+        "request": question,
+        "response": answer,
+        "session_id": session.id,
+        "user": {
+            "id": user.id,
+            "username": user.username
+        }
+    })
+

@@ -11,3 +11,4 @@ argon2-cffi
 google-genai
 google
 rapidfuzz
+axios

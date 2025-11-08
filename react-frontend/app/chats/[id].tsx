@@ -14,7 +14,10 @@ interface Message {
 }
 
 const Chat = () => {
-  const { id, prompt } = useLocalSearchParams<{ id: string; prompt?: string }>();
+  const { id, prompt } = useLocalSearchParams<{
+    id: string;
+    prompt?: string;
+  }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +30,13 @@ const Chat = () => {
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}`, {
         method: "GET",
-        credentials: 'include', // Important for CSRF
+        credentials: "include", // Important for CSRF
       });
 
-      const csrfToken = response.headers.get('X-CSRFToken') ||
-                       response.headers.get('csrftoken') ||
-                       response.headers.get('csrf-token');
+      const csrfToken =
+        response.headers.get("X-CSRFToken") ||
+        response.headers.get("csrftoken") ||
+        response.headers.get("csrf-token");
 
       console.log("CSRF Token from headers:", csrfToken);
       return csrfToken;
@@ -74,13 +78,9 @@ const Chat = () => {
       console.log("Full URL being called:", apiUrl);
       console.log("User message:", userMessage);
 
-      // Get CSRF token first
-      const csrfToken = await getCSRFToken();
-      console.log("Retrieved CSRF token:", csrfToken);
-
       // Create abort controller for timeout functionality
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000000000000);
+      const timeoutId = setTimeout(() => controller.abort(), 36000);
 
       const requestBody = {
         question: userMessage,
@@ -94,10 +94,6 @@ const Chat = () => {
       };
 
       // Add CSRF token to headers if available
-      if (csrfToken) {
-        headers['X-CSRFToken'] = csrfToken;
-        console.log("Added CSRF token to headers");
-      }
 
       console.log("Request headers:", headers);
 
@@ -106,7 +102,7 @@ const Chat = () => {
         headers: headers,
         body: JSON.stringify(requestBody),
         signal: controller.signal,
-        credentials: 'include', // Important for CSRF
+        credentials: "include", // Important for CSRF
       });
 
       console.log("=== RESPONSE RECEIVED ===");
@@ -143,16 +139,28 @@ const Chat = () => {
           errorData = { message: responseText || "Unknown error" };
         }
 
-        const message = errorData.message || errorData.error || errorData.detail || "Chyba pri komunikácii s AI";
+        const message =
+          errorData.message ||
+          errorData.error ||
+          errorData.detail ||
+          "Chyba pri komunikácii s AI";
 
         if (response.status === 403) {
-          throw new Error(`CSRF Error (403): Skúste reštartovať aplikáciu. ${message}`);
+          throw new Error(
+            `CSRF Error (403): Skúste reštartovať aplikáciu. ${message}`
+          );
         } else if (response.status === 401 || response.status === 400) {
-          throw new Error(`Neplatná správa alebo chyba AI (${response.status}): ${message}`);
+          throw new Error(
+            `Neplatná správa alebo chyba AI (${response.status}): ${message}`
+          );
         } else if (response.status === 404) {
-          throw new Error(`AI služba nie je dostupná (404): Endpoint ${apiUrl} neexistuje`);
+          throw new Error(
+            `AI služba nie je dostupná (404): Endpoint ${apiUrl} neexistuje`
+          );
         } else if (response.status === 405) {
-          throw new Error(`Method not allowed (405): POST nie je povolené pre ${apiUrl}`);
+          throw new Error(
+            `Method not allowed (405): POST nie je povolené pre ${apiUrl}`
+          );
         } else if (response.status === 500) {
           throw new Error(`Chyba AI servera (500): ${message}`);
         } else if (response.status === 502 || response.status === 503) {
@@ -176,7 +184,6 @@ const Chat = () => {
       }
 
       return data;
-
     } catch (error: any) {
       console.log("=== CATCH BLOCK ERROR ===");
       console.log("Error name:", error.name);
@@ -221,7 +228,8 @@ const Chat = () => {
       const response = await sendMessageToAI(userMessage);
       console.log("AI chat successful:", response);
 
-      const aiResponseText = response.response || response.message || "AI odpoveď nie je dostupná";
+      const aiResponseText =
+        response.response || response.message || "AI odpoveď nie je dostupná";
 
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -230,8 +238,7 @@ const Chat = () => {
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, aiResponse]);
-
+      setMessages((prev) => [...prev, aiResponse]);
     } catch (error: any) {
       console.error("=== AI CHAT FAILED ===");
       console.error("Error message:", error.message);
@@ -245,7 +252,7 @@ const Chat = () => {
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, errorResponse]);
+      setMessages((prev) => [...prev, errorResponse]);
     } finally {
       setIsLoading(false);
     }
@@ -266,7 +273,7 @@ const Chat = () => {
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, newMessage]);
+      setMessages((prev) => [...prev, newMessage]);
       const messageText = inputValue.trim();
       setInputValue("");
 
@@ -289,9 +296,7 @@ const Chat = () => {
       setMessages([initialMessage]);
 
       // Send initial prompt to AI after a short delay
-      setTimeout(() => {
-        handleAIResponse(decodeURIComponent(prompt as string));
-      }, 10000000);
+      handleAIResponse(decodeURIComponent(prompt as string));
     }
   }, [prompt]);
 
@@ -330,7 +335,10 @@ const Chat = () => {
           AI Asistent
         </Text>
         {isLoading && (
-          <View className="w-2 h-2 bg-green-500 rounded-full" style={{ opacity: 0.8 }} />
+          <View
+            className="w-2 h-2 bg-green-500 rounded-full"
+            style={{ opacity: 0.8 }}
+          />
         )}
       </View>
 
@@ -344,13 +352,13 @@ const Chat = () => {
         {messages.map((message) => (
           <View
             key={message.id}
-            className={`mb-4 ${message.isUser ? 'items-end' : 'items-start'}`}
+            className={`mb-4 ${message.isUser ? "items-end" : "items-start"}`}
           >
             <View
               className={`max-w-[80%] p-4 rounded-2xl ${
                 message.isUser
-                  ? 'bg-blue-600 rounded-br-md'
-                  : 'bg-box border border-stroke rounded-bl-md'
+                  ? "bg-blue-600 rounded-br-md"
+                  : "bg-box border border-stroke rounded-bl-md"
               }`}
               style={!message.isUser ? { borderWidth: 0.5 } : {}}
             >
@@ -359,12 +367,12 @@ const Chat = () => {
               </Text>
               <Text
                 className={`text-xs mt-2 ${
-                  message.isUser ? 'text-blue-100' : 'text-gray-400'
+                  message.isUser ? "text-blue-100" : "text-gray-400"
                 }`}
               >
                 {message.timestamp.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
               </Text>
             </View>
@@ -374,7 +382,10 @@ const Chat = () => {
         {/* Loading indicator for AI response */}
         {isLoading && (
           <View className="items-start mb-4">
-            <View className="bg-box border border-stroke rounded-2xl rounded-bl-md p-4" style={{ borderWidth: 0.5 }}>
+            <View
+              className="bg-box border border-stroke rounded-2xl rounded-bl-md p-4"
+              style={{ borderWidth: 0.5 }}
+            >
               <Text className="text-white text-base">AI píše...</Text>
             </View>
           </View>
@@ -390,7 +401,9 @@ const Chat = () => {
         >
           <View className="bg-accent rounded-lg py-3.5 flex flex-row justify-center items-center">
             <SearchBar
-              placeholder={isLoading ? "AI odpoveď..." : "Zadaj svoju správu..."}
+              placeholder={
+                isLoading ? "AI odpoveď..." : "Zadaj svoju správu..."
+              }
               value={inputValue}
               onChangeText={setInputValue}
               onSend={handleSendMessage}

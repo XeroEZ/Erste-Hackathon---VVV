@@ -90,3 +90,5 @@ def login(request):
     else:
         print("Authentication failed for user:", username)
         return Response({"error": "Neplatné údaje."}, status=401)
+    
+

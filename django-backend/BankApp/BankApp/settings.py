@@ -97,6 +97,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://10.179.94.99:19006",  # Keep existing for local development
     "http://10.179.94.99:19000",  # Keep existing for local development
     "http://10.179.94.99:8081",
+    # "http://10.179.94.99:8000/",
     "http://127.0.0.1:19006",
 ]
 
