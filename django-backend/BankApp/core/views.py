@@ -18,7 +18,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Count
 from django.contrib.auth.models import User
 
-from . import ChatRequestSerializer
+from .serializers import ChatRequestSerializer
 from ChatBot import geminiKey
 
 
