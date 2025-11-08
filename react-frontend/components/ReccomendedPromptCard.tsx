@@ -8,6 +8,11 @@ interface ReccomendedPromptCardProps {
   onPress?: () => void;
 }
 
+// Generate a unique chat ID
+const generateChatId = () => {
+  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+};
+
 const ReccomendedPromptCard = ({
   prompt,
   color,
@@ -17,10 +22,9 @@ const ReccomendedPromptCard = ({
     if (onPress) {
       onPress();
     } else {
-      // TODO: Navigate to new chat with this prompt
-      // const chatId = generateNewChatId(); // You'll implement this
-      // router.push(`/chats/${chatId}?prompt=${encodeURIComponent(prompt)}`);
-      console.log("Navigate to new chat with prompt:", prompt);
+      // Navigate to new chat with this prompt
+      const chatId = generateChatId();
+      router.push(`/chats/${chatId}?prompt=${encodeURIComponent(prompt)}`);
     }
   };
 
