@@ -80,7 +80,7 @@ const Chat = () => {
 
       // Create abort controller for timeout functionality
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const timeoutId = setTimeout(() => controller.abort(), 3000000000000);
 
       const requestBody = {
         question: userMessage,
@@ -291,7 +291,7 @@ const Chat = () => {
       // Send initial prompt to AI after a short delay
       setTimeout(() => {
         handleAIResponse(decodeURIComponent(prompt as string));
-      }, 1000);
+      }, 10000000);
     }
   }, [prompt]);
 

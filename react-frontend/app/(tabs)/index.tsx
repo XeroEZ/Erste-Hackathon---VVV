@@ -1,6 +1,13 @@
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import { images } from "@/constants/images";
-import { Text, View, Image, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 interface User {
   id: number;
@@ -28,7 +35,7 @@ export default function Index() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // Important for session auth
+          credentials: "include",
         }
       );
 
@@ -46,6 +53,26 @@ export default function Index() {
     }
   };
 
+  // Získanie aktuálneho mesiaca
+  const getCurrentMonth = () => {
+    const months = [
+      "január",
+      "február",
+      "marec",
+      "apríl",
+      "máj",
+      "jún",
+      "júl",
+      "august",
+      "september",
+      "október",
+      "november",
+      "december",
+    ];
+    const currentMonth = new Date().getMonth();
+    return months[currentMonth];
+  };
+
   return (
     <View className="flex-1 bg-black">
       <Image
@@ -54,20 +81,61 @@ export default function Index() {
         resizeMode="cover"
       />
 
-      <View className="flex-1 px-4 pt-20">
+      <View className="flex-1 px-6 pt-16">
         {loading ? (
           <View className="items-center justify-center flex-1">
             <ActivityIndicator size="large" color="#FFFFFF" />
           </View>
         ) : error ? (
-          <View className="items-center">
+          <View className="items-center justify-center flex-1">
             <Text className="text-red-500 text-lg">{error}</Text>
           </View>
         ) : user ? (
-          <View className="items-center">
-            <Text className="text-white text-3xl font-bold">
-              Vitajte, {user.first_name} {user.last_name}!
-            </Text>
+          <View className="flex-1">
+            {/* Header */}
+            <View className="items-center mb-8">
+              <Text className="text-white text-3xl font-bold">
+                Vitajte {user.first_name}
+              </Text>
+            </View>
+
+                        {/* Výdavky za mesiac */}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.push("/(tabs)/expenses")}
+              className="bg-box rounded-3xl p-8 mb-6 border border-[#2a3550]"
+            >
+              <Text className="text-white/60 text-base mb-3">
+                Výdavky za {getCurrentMonth()}
+              </Text>
+              <Text className="text-white text-5xl font-bold">100,000€</Text>
+            </TouchableOpacity>
+
+            {/* Stav účtu */}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.push("/(tabs)/accbalance")}
+              className="bg-box rounded-3xl p-8 mb-8 border border-[#2a3550]"
+            >
+              <Text className="text-white/60 text-base mb-3">Stav účtu</Text>
+              <Text className="text-white text-5xl font-bold">
+                100,000,000€
+              </Text>
+            </TouchableOpacity>
+
+            {/* Karta */}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.push("/(tabs)/card")}
+              className="rounded-3xl overflow-hidden"
+            >
+              <Image
+                source={images.card}
+                className="w-full h-56"
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+
           </View>
         ) : null}
       </View>
