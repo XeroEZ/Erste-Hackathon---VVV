@@ -86,21 +86,41 @@ const signin = () => {
    */
   const authenticateUser = async (username: string, password: string) => {
     try {
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}api/banking/login/`;
+      console.log("API URL:", apiUrl);
+      console.log("Environment variable:", process.env.EXPO_PUBLIC_API_URL);
+      console.log("Full URL being called:", apiUrl);
+
       // Create abort controller for timeout functionality
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      const response = await fetch("http://localhost:8000/api/banking/login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      console.log("Sending request to:", apiUrl);
+      console.log(
+        "Request body:",
+        JSON.stringify({
           username: username,
           password: password,
-        }),
-        signal: controller.signal, // For timeout functionality
-      });
+        })
+      );
+
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}api/banking/login/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
+          signal: controller.signal, // For timeout functionality
+        }
+      );
+
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       // Clear the timeout since request completed
       clearTimeout(timeoutId);
@@ -152,6 +172,8 @@ const signin = () => {
    * Handle button press animation, validation, and API call
    */
   const handleSignIn = async () => {
+    console.log("Environment check:");
+    console.log("EXPO_PUBLIC_API_URL:", process.env.EXPO_PUBLIC_API_URL);
     // Button press animation - scale down then back up
     Animated.sequence([
       Animated.timing(buttonScaleAnim, {
@@ -207,7 +229,6 @@ const signin = () => {
       // Always reset loading state
       setIsLoading(false);
     }
-    router.replace("/(tabs)");
   };
 
   /**
