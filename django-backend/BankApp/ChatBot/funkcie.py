@@ -181,27 +181,18 @@ def Get_AllPrice_blocky(blocky):
 
 __cache = {}
 def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
-    
-
+    """
+    Vytvorí peknú textovú odpoveď pre používateľa pomocou Gemini.
+    """
     prompt_na_odpoved = (
-        "Si chatbot pre finančnú aplikáciu. Tvoja úloha je odpovedať používateľovi na jeho otázku priamo, prívetivo a v prehľadnom formáte."
-        "\n"
-        "\n**DÁTA K ODPOVEDI:**"
-        f"\n- **Otázka používateľa:** \"{otazka_uzivatela}\""
-        f"\n- **Celková cena/suma:** {celkova_cena}"
-        "\n- **Zoznam produktov/transakcií:**"
-        f"\n{cleaned_blocks} {addTest}"
-        "\n"
-        "\n**POKYNY PRE GENERovanie odpovede (Výsledok AI):**"
-        "\n1.  **Tón:** Používaj neformálny, ale profesionálny a ubezpečujúci tón. Komunikuj v slovenčine."
-        "\n2.  **Štruktúra:** Odpoveď začni krátkym zhrnutím celkovej sumy, na ktorú sa pýta."
-        "\n3.  **Formátovanie:** Použi formátovanie Markdown (napr. **tučné písmo** a odrážky `*`), ale **vyhni sa hviezdičkám v prostrednom texte** a iným rušivým znakom, ktoré by mohli pokaziť vizuál aplikácie. Odpoveď musí byť elegantný textový blok."
-        "\n4.  **Obsah:** Vždy uveď **celkovú sumu** na začiatku. Následne prehľadne vypíš **zoznam súvisiacich produktov/transakcií** (zoznam vyššie). Detaily zo zoznamu iba preberaj, **nekomentuj ich**."
-        "\n5.  **Čistota výstupu:** Tvojou **JEDINOU** odpoveďou musí byť výsledný text pre používateľa. Žiadne úvodné frázy ako 'Tu je odpoveď', 'Vypočítal som' alebo komentáre k pokynom."
-        "\n"
-        "\n[ŽIADANÝ VÝSLEDOK (začni rovno odpoveďou)]: "
+        f"Si chatbot pre finančnú aplikáciu. Tvojou úlohou je odpovedať na otázky používateľov na základe poskytnutých dát o transakciách. "
+        f"Odpovedaj v slovenčine, stručne, priateľsky a profesionálne. Používaj maximálne 2-3 vety.\n\n"
+        f"Otázka používateľa: '{otazka_uzivatela}'\n\n"
+        f"Dáta o transakciách (celková suma za dané obdobie je {celkova_cena} €):\n"
+        # FIX: Changed 'cleaned_blocks' to 'blocky', which is the function parameter
+        f"{blocky}\n\n"
+        f"Na základe týchto dát, sformuluj odpoveď na otázku používateľa."
     )
-    response = gemini_main.OtazkaNaGeminiBasic(prompt_na_odpoved).replace("*","")
 
-    __cache[cache_key] = response
-    return response
+    # Zavolanie Gemini API na vygenerovanie odpovede
+    return gemini_main.OtazkaNaGeminiBasic(prompt_na_odpoved).replace("*", "")
