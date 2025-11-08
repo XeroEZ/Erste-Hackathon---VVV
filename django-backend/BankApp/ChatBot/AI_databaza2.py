@@ -24,25 +24,24 @@ def main():
     #AI prompt na vyhodnotenie časového rozmedzia
     today = datetime.datetime.now().strftime("%Y-%m-%d")
     prompt_cas = f"""
-Si AI asistent pre analýzu dát. Tvojou úlohou je určiť presný časový rozsah,
-ktorý používateľ svojou otázkou myslí.
+        Si AI asistent pre analýzu dát. Tvojou úlohou je určiť presný časový rozsah,
+        ktorý používateľ svojou otázkou myslí.
 
-🧠 Pravidlá:
-1. Ak otázka obsahuje konkrétne dátumy (napr. "od 1.6.2024 do 1.1.2025"), vráť ich ako rozsah.
-2. Ak obsahuje relatívny čas (napr. "za posledné 3 mesiace", "tento rok", "minulý týždeň"),
-   prepočítaj na presné dátumy.
-3. Ak otázka neobsahuje žiadny časový údaj, nastav celé obdobie (1900-01-01 až dnešný dátum).
-4. Dnešný dátum je: {today}
-5. Odpoveď musí byť **IBA** Python zoznam dvoch dátumov v ISO formáte (YYYY-MM-DD).
-   Príklad: ["2024-06-01", "2025-01-01"]
+        🧠 Pravidlá:
+        1. Ak otázka obsahuje konkrétne dátumy (napr. "od 1.6.2024 do 1.1.2025"), vráť ich ako rozsah.
+        2. Ak obsahuje relatívny čas (napr. "za posledné 3 mesiace", "tento rok", "minulý týždeň"),
+        prepočítaj na presné dátumy.
+        3. Ak otázka neobsahuje žiadny časový údaj, nastav celé obdobie (1900-01-01 až dnešný dátum).
+        4. Dnešný dátum je: {today}
+        5. Odpoveď musí byť **IBA** Python zoznam dvoch dátumov v ISO formáte (YYYY-MM-DD).
+        Príklad: ["2024-06-01", "2025-01-01"]
 
-----------------------------------------
-[OTÁZKA POUŽÍVATEĽA]:
-"{otazka_uzivatela}"
-----------------------------------------
-[ODPOVEĎ - časové rozmedzie]:
-"""
-
+        ----------------------------------------
+        [OTÁZKA POUŽÍVATEĽA]:
+        "{otazka_uzivatela}"
+        ----------------------------------------
+        [ODPOVEĎ - časové rozmedzie]:
+        """
     odpoved_cas = gemini_main.OtazkaNaGeminiBasic(prompt_cas).strip()
 
     try:
