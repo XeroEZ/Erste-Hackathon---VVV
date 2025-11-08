@@ -4,24 +4,19 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Modal,
-  TextInput,
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { images } from "@/constants/images";
+import { router } from "expo-router";
 
 import brightnessIcon from "@/assets/icons/brightness.png";
 import languageIcon from "@/assets/icons/language.png";
 import lockOpenIcon from "@/assets/icons/lock_open.png";
 import supportIcon from "@/assets/icons/support.png";
 import userIcon from "@/assets/icons/user.png";
-import editIcon from "@/assets/icons/edit.png";
 import logoutIcon from "@/assets/icons/logout.png";
-//import { changePassword } from "@/services/api";
 
 interface User {
   id: number;
@@ -32,11 +27,6 @@ interface User {
 }
 
 const Settings = () => {
-  const [pwdModal, setPwdModal] = useState(false);
-  const [currentPwd, setCurrentPwd] = useState("");
-  const [newPwd, setNewPwd] = useState("");
-  const [confirmPwd, setConfirmPwd] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -71,40 +61,49 @@ const Settings = () => {
     }
   };
 
-  const openPwdModal = () => setPwdModal(true);
-  const closePwdModal = () => {
-    setPwdModal(false);
-    setCurrentPwd("");
-    setNewPwd("");
-    setConfirmPwd("");
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}api/core/logout/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+ 
+      router.replace("/(auth)/signin");
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.log("Logout completed with warning:", errorData);
+      }
+    } catch (err) {
+      console.log("Logout completed:", err);
+      router.replace("/(auth)/signin");
+    }
   };
 
-  const onSubmitChangePwd = async () => {
-    if (!currentPwd || !newPwd || !confirmPwd) {
-      Alert.alert("Chyba", "Vyplňte všetky polia.");
-      return;
-    }
-    if (newPwd.length < 8) {
-      Alert.alert("Chyba", "Nové heslo musí mať aspoň 8 znakov.");
-      return;
-    }
-    if (newPwd !== confirmPwd) {
-      Alert.alert("Chyba", "Heslá sa nezhodujú.");
-      return;
-    }
-    try {
-      setSubmitting(true);
-      //await changePassword({ current_password: currentPwd, new_password: newPwd, new_password_confirm: confirmPwd });
-      setSubmitting(false);
-      Alert.alert("Hotovo", "Heslo bolo zmenené. Prihláste sa znova.");
-      closePwdModal();
-      // Tip: po úspechu môžeš odhlásiť používateľa a presmerovať na Sign in.
-    } catch (e: any) {
-      setSubmitting(false);
-      const msg =
-        typeof e?.message === "string" ? e.message : "Zmena hesla zlyhala.";
-      Alert.alert("Chyba", msg);
-    }
+  const confirmLogout = () => {
+    Alert.alert(
+      "Odhlásiť sa",
+      "Naozaj sa chcete odhlásiť?",
+      [
+        {
+          text: "Zrušiť",
+          style: "cancel",
+        },
+        {
+          text: "Odhlásiť",
+          style: "destructive",
+          onPress: handleLogout,
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   if (loading) {
@@ -150,18 +149,9 @@ const Settings = () => {
               />
             </View>
             <View className="flex-1">
-              <View className="flex-row items-center">
-                <Text className="text-white text-xl font-semibold">
-                  {user ? `${user.first_name} ${user.last_name}` : "Používateľ"}
-                </Text>
-                <TouchableOpacity className="ml-3 px-2 py-1">
-                  <Image
-                    source={editIcon}
-                    className="w-5 h-5"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              </View>
+              <Text className="text-white text-xl font-semibold">
+                {user ? `${user.first_name} ${user.last_name}` : "Používateľ"}
+              </Text>
             </View>
           </View>
 
@@ -170,12 +160,6 @@ const Settings = () => {
           <View className="space-y-4">
             <DetailLine label="User ID:" value={user?.username || "N/A"} />
             <DetailLine label="Email:" value={user?.email || "N/A"} />
-            <DetailLine
-              label="Heslo:"
-              value="************"
-              edit
-              onPressEdit={openPwdModal}
-            />
           </View>
         </View>
 
@@ -200,6 +184,7 @@ const Settings = () => {
         <TouchableOpacity
           activeOpacity={0.7}
           className="mt-8 rounded-3xl bg-white/12 overflow-hidden"
+          onPress={confirmLogout}
         >
           <View className="py-4 flex-row items-center justify-center">
             <Image
@@ -214,80 +199,6 @@ const Settings = () => {
           </View>
         </TouchableOpacity>
       </ScrollView>
-
-      {/* Change password modal */}
-      <Modal
-        visible={pwdModal}
-        animationType="slide"
-        transparent
-        onRequestClose={closePwdModal}
-      >
-        <View className="flex-1 bg-black/60 items-center justify-end">
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-            className="w-full"
-          >
-            <View className="bg-neutral-900 rounded-t-3xl p-6">
-              <Text className="text-white text-xl font-semibold mb-4">
-                Zmeniť heslo
-              </Text>
-
-              <Text className="text-white/70 mb-2">Aktuálne heslo</Text>
-              <TextInput
-                value={currentPwd}
-                onChangeText={setCurrentPwd}
-                placeholder="••••••••"
-                placeholderTextColor="#8b8b8b"
-                secureTextEntry
-                className="bg-white/10 rounded-xl px-4 py-3 text-white mb-4"
-              />
-
-              <Text className="text-white/70 mb-2">Nové heslo</Text>
-              <TextInput
-                value={newPwd}
-                onChangeText={setNewPwd}
-                placeholder="min. 8 znakov"
-                placeholderTextColor="#8b8b8b"
-                secureTextEntry
-                className="bg-white/10 rounded-xl px-4 py-3 text-white mb-4"
-              />
-
-              <Text className="text-white/70 mb-2">
-                Potvrdenie nového hesla
-              </Text>
-              <TextInput
-                value={confirmPwd}
-                onChangeText={setConfirmPwd}
-                placeholder="zopakujte nové heslo"
-                placeholderTextColor="#8b8b8b"
-                secureTextEntry
-                className="bg-white/10 rounded-xl px-4 py-3 text-white mb-6"
-              />
-
-              <View className="flex-row">
-                <TouchableOpacity
-                  onPress={closePwdModal}
-                  disabled={submitting}
-                  className="flex-1 mr-3 bg-white/10 rounded-xl py-3 items-center"
-                >
-                  <Text className="text-white">Zrušiť</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onSubmitChangePwd}
-                  disabled={submitting}
-                  className="flex-1 bg-white/20 rounded-xl py-3 items-center"
-                >
-                  {submitting ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text className="text-white font-semibold">Uložiť</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -295,22 +206,13 @@ const Settings = () => {
 const DetailLine = ({
   label,
   value,
-  edit,
-  onPressEdit,
 }: {
   label: string;
   value: string;
-  edit?: boolean;
-  onPressEdit?: () => void;
 }) => (
-  <View className="flex-row items-center">
+  <View className="flex-row items-center mb-3">
     <Text className="text-white/40 w-24">{label}</Text>
     <Text className="text-white flex-1">{value}</Text>
-    {edit ? (
-      <TouchableOpacity onPress={onPressEdit} className="pl-2">
-        <Image source={editIcon} className="w-4 h-4" resizeMode="contain" />
-      </TouchableOpacity>
-    ) : null}
   </View>
 );
 
