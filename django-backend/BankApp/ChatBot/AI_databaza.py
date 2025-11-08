@@ -59,7 +59,7 @@ def Filtrovanie_podla_casu(blocky, otazka_uzivatela):
 
     # 🧩 2️⃣ Načítaj ako JSON
     data = json.loads(clean_text)
-    print(data)
+    #print(data)
 
 
     return funkcie.delete_useless_Time(blocky, data["end_date"], data["start_date"])

@@ -152,7 +152,7 @@ def Get_newest_blocek_time(blocky):
 
     return newest_time.strftime("%Y-%m-%dT%H:%M:%SZ") if newest_time else None
 
-def delete_useless_Time(InputBlocky, start_date, end_date):
+def delete_useless_Time(InputBlocky, end_date, start_date):#end_date
     """Odstráni položky, ktorých dátum je medzi start_date a end_date (vrátane)."""
     cleaned_blocks = []
 
@@ -181,7 +181,7 @@ def Get_AllPrice_blocky(blocky):
 
 
 def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
-    print(f"Blocky {blocky} {len(blocky)}")
+    print(f"Blocky {len(blocky)}")
 
 
 
