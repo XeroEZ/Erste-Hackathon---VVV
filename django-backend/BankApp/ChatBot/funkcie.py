@@ -174,6 +174,6 @@ def Get_AllPrice_blocky(blocky):
 
 
 def ErikPeknyVipis(blocky, celkova_cena):
-
+    print("ppp")
     return f"Celova cena {celkova_cena}"
     return None

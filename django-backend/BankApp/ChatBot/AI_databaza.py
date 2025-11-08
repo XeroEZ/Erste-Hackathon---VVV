@@ -78,6 +78,7 @@ def Filtrovanie_podla_casu(blocky, otazka_uzivatela):
 
 
 def AI(otazka_uzivatela):
+
     print("Vitaj v komunikacije s Gemini")
     # spýtaj sa používateľa na odpoveď
     cely_json_string = funkcie.LoadUserDataJson()
@@ -107,8 +108,8 @@ def AI(otazka_uzivatela):
 
     print(f"✅ Súbor uložený: {file_path}")
 
-
-    funkcie.ErikPeknyVipis(Blocky_po_filtovani_aj_casu, funkcie.Get_AllPrice_blocky(Blocky_po_filtovani_aj_casu))
+    print("eee")
+    return funkcie.ErikPeknyVipis(Blocky_po_filtovani_aj_casu, funkcie.Get_AllPrice_blocky(Blocky_po_filtovani_aj_casu))
 
 
 
