@@ -172,9 +172,11 @@ def Get_AllPrice_blocky(blocky):
 
     return round(celkova_cena, 2)
 
-
+__cache = {}
 def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
-    
+    cache_key = f"{otazka_uzivatela}_{celkova_cena}_{len(blocky)}"
+    if cache_key in __cache:
+        return __cache[cache_key]
 
     prompt_na_odpoved = (
         "Si chatbot pre finančnú aplikáciu. Tvoja úloha je odpovedať používateľovi na jeho otázku priamo, prívetivo a v prehľadnom formáte."
@@ -194,5 +196,7 @@ def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
         "\n"
         "\n[ŽIADANÝ VÝSLEDOK (začni rovno odpoveďou)]: "
     )
+    response = gemini_main.OtazkaNaGeminiBasic(prompt_na_odpoved).replace("*","")
 
-    return gemini_main.OtazkaNaGeminiBasic(prompt_na_odpoved).replace("*","")
+    __cache[cache_key] = response
+    return response
