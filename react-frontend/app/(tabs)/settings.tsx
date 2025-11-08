@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { images } from "@/constants/images";
 
 import brightnessIcon from "@/assets/icons/brightness.png";
@@ -23,12 +23,53 @@ import editIcon from "@/assets/icons/edit.png";
 import logoutIcon from "@/assets/icons/logout.png";
 //import { changePassword } from "@/services/api";
 
+interface User {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 const Settings = () => {
   const [pwdModal, setPwdModal] = useState(false);
   const [currentPwd, setCurrentPwd] = useState("");
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}api/core/user/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const data = await response.json();
+      setUser(data);
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      Alert.alert("Chyba", "Nepodarilo sa načítať používateľa");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openPwdModal = () => setPwdModal(true);
   const closePwdModal = () => {
@@ -65,6 +106,14 @@ const Settings = () => {
       Alert.alert("Chyba", msg);
     }
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-black items-center justify-center">
+        <ActivityIndicator size="large" color="#FFFFFF" />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-black">
@@ -103,7 +152,7 @@ const Settings = () => {
             <View className="flex-1">
               <View className="flex-row items-center">
                 <Text className="text-white text-xl font-semibold">
-                  Janko Hraško
+                  {user ? `${user.first_name} ${user.last_name}` : "Používateľ"}
                 </Text>
                 <TouchableOpacity className="ml-3 px-2 py-1">
                   <Image
@@ -117,10 +166,10 @@ const Settings = () => {
           </View>
 
           <View className="h-px bg-white/15 my-5" />
-
           {/* Detail lines */}
           <View className="space-y-4">
-            <DetailLine label="User ID:" value="jankohrasko11" />
+            <DetailLine label="User ID:" value={user?.username || "N/A"} />
+            <DetailLine label="Email:" value={user?.email || "N/A"} />
             <DetailLine
               label="Heslo:"
               value="************"
