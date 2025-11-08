@@ -21,109 +21,206 @@ const Chat = () => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   /**
+   * Get CSRF token from Django
+   */
+  const getCSRFToken = async () => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}`, {
+        method: "GET",
+        credentials: 'include', // Important for CSRF
+      });
+
+      const csrfToken = response.headers.get('X-CSRFToken') ||
+                       response.headers.get('csrftoken') ||
+                       response.headers.get('csrf-token');
+
+      console.log("CSRF Token from headers:", csrfToken);
+      return csrfToken;
+    } catch (error) {
+      console.log("Failed to get CSRF token:", error);
+      return null;
+    }
+  };
+
+  /**
+   * Test if the server is reachable
+   */
+  const testServerConnectivity = async () => {
+    try {
+      const baseUrl = process.env.EXPO_PUBLIC_API_URL;
+      console.log("Testing server connectivity to:", baseUrl);
+
+      const response = await fetch(baseUrl, {
+        method: "GET",
+      });
+
+      console.log("Server test response:", response.status);
+      return response.status;
+    } catch (error) {
+      console.log("Server connectivity test failed:", error);
+      return null;
+    }
+  };
+
+  /**
    * Send message to AI backend using the same approach as signin
    */
   const sendMessageToAI = async (userMessage: string) => {
     try {
-      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}api/chat/message/`;
+      const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}chat/response/`;
+      console.log("=== AI API DEBUG START ===");
       console.log("Chat API URL:", apiUrl);
       console.log("Environment variable:", process.env.EXPO_PUBLIC_API_URL);
       console.log("Full URL being called:", apiUrl);
+      console.log("User message:", userMessage);
+
+      // Get CSRF token first
+      const csrfToken = await getCSRFToken();
+      console.log("Retrieved CSRF token:", csrfToken);
 
       // Create abort controller for timeout functionality
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout for AI
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-      console.log("Sending request to:", apiUrl);
-      console.log(
-        "Request body:",
-        JSON.stringify({
-          message: userMessage,
-          chat_id: id,
-        })
-      );
+      const requestBody = {
+        question: userMessage,
+      };
 
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}api/chat/message/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: userMessage,
-            chat_id: id,
-          }),
-          signal: controller.signal, // For timeout functionality
-        }
-      );
+      console.log("Request body:", JSON.stringify(requestBody, null, 2));
 
+      // Prepare headers
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      // Add CSRF token to headers if available
+      if (csrfToken) {
+        headers['X-CSRFToken'] = csrfToken;
+        console.log("Added CSRF token to headers");
+      }
+
+      console.log("Request headers:", headers);
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+        credentials: 'include', // Important for CSRF
+      });
+
+      console.log("=== RESPONSE RECEIVED ===");
       console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
+      console.log("Response statusText:", response.statusText);
+      console.log("Response URL:", response.url);
 
-      // Clear the timeout since request completed
+      // Log response headers
+      const responseHeaders = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+      console.log("Response headers:", responseHeaders);
+
       clearTimeout(timeoutId);
 
-      // Check if response is ok (status 200-299)
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const message =
-          errorData.message ||
-          errorData.error ||
-          "Chyba pri komunikácii s AI";
+      // Get the raw response text for debugging
+      const responseText = await response.text();
+      console.log("Raw response text:", responseText);
+      console.log("Response text length:", responseText.length);
 
-        if (response.status === 401 || response.status === 400) {
-          throw new Error("Neplatná správa alebo chyba AI");
+      if (!response.ok) {
+        console.log("=== ERROR RESPONSE DETAILS ===");
+        console.log("Status:", response.status);
+        console.log("Status Text:", response.statusText);
+        console.log("Raw Response:", responseText);
+
+        let errorData = {};
+        try {
+          errorData = responseText ? JSON.parse(responseText) : {};
+          console.log("Parsed error data:", errorData);
+        } catch (parseError) {
+          console.log("Failed to parse error response as JSON:", parseError);
+          errorData = { message: responseText || "Unknown error" };
+        }
+
+        const message = errorData.message || errorData.error || errorData.detail || "Chyba pri komunikácii s AI";
+
+        if (response.status === 403) {
+          throw new Error(`CSRF Error (403): Skúste reštartovať aplikáciu. ${message}`);
+        } else if (response.status === 401 || response.status === 400) {
+          throw new Error(`Neplatná správa alebo chyba AI (${response.status}): ${message}`);
         } else if (response.status === 404) {
-          throw new Error("AI služba nie je dostupná");
+          throw new Error(`AI služba nie je dostupná (404): Endpoint ${apiUrl} neexistuje`);
+        } else if (response.status === 405) {
+          throw new Error(`Method not allowed (405): POST nie je povolené pre ${apiUrl}`);
         } else if (response.status === 500) {
-          throw new Error("Chyba AI servera. Skúste to neskôr.");
+          throw new Error(`Chyba AI servera (500): ${message}`);
+        } else if (response.status === 502 || response.status === 503) {
+          throw new Error(`Server nedostupný (${response.status}): ${message}`);
         } else {
-          throw new Error(message);
+          throw new Error(`HTTP Error ${response.status}: ${message}`);
         }
       }
 
-      // Parse and return the response data
-      const data = await response.json();
-      console.log("AI Response data:", data);
+      // Parse successful response
+      let data;
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+        console.log("=== SUCCESS RESPONSE ===");
+        console.log("Parsed data:", data);
+      } catch (parseError) {
+        console.log("=== JSON PARSE ERROR ===");
+        console.log("Parse error:", parseError);
+        console.log("Trying to parse:", responseText);
+        throw new Error("Invalid JSON response from server");
+      }
+
       return data;
+
     } catch (error: any) {
-      // Handle different types of errors
+      console.log("=== CATCH BLOCK ERROR ===");
+      console.log("Error name:", error.name);
+      console.log("Error message:", error.message);
+      console.log("Error stack:", error.stack);
+      console.log("Full error object:", error);
+
       if (error.name === "AbortError") {
-        // Request was aborted due to timeout
         throw new Error("AI odpoveď trvala príliš dlho. Skúste to znovu.");
       } else if (
         error.message.includes("Network") ||
-        error.message.includes("fetch")
+        error.message.includes("fetch") ||
+        error.message.includes("Failed to fetch") ||
+        error.name === "TypeError"
       ) {
-        // Network error
         throw new Error(
-          "Nemožno sa pripojiť k AI serveru. Skontrolujte internetové pripojenie."
+          `Nemožno sa pripojiť k serveru: ${process.env.EXPO_PUBLIC_API_URL}. Skontrolujte pripojenie a server.`
         );
       } else if (error.message) {
-        // Custom error message from above
         throw error;
       } else {
-        // Other unexpected errors
         throw new Error("Nastala neočakávaná chyba pri komunikácii s AI.");
       }
     }
   };
 
   /**
-   * Handle AI response
+   * Handle AI response with enhanced debugging
    */
   const handleAIResponse = async (userMessage: string) => {
     setIsLoading(true);
 
     try {
-      console.log("Attempting AI chat with message:", userMessage);
+      console.log("=== STARTING AI RESPONSE ===");
+      console.log("User message:", userMessage);
+      console.log("Environment URL:", process.env.EXPO_PUBLIC_API_URL);
+
+      // Test server connectivity first
+      const serverStatus = await testServerConnectivity();
+      console.log("Server connectivity test result:", serverStatus);
 
       const response = await sendMessageToAI(userMessage);
-
       console.log("AI chat successful:", response);
 
-      // Extract AI response text from the response
       const aiResponseText = response.response || response.message || "AI odpoveď nie je dostupná";
 
       const aiResponse: Message = {
@@ -136,19 +233,20 @@ const Chat = () => {
       setMessages(prev => [...prev, aiResponse]);
 
     } catch (error: any) {
-      console.error("AI chat failed:", error.message);
+      console.error("=== AI CHAT FAILED ===");
+      console.error("Error message:", error.message);
+      console.error("Full error:", error);
 
-      // Show error as AI message
+      // Show detailed error for debugging
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `Prepáčte, nastala chyba: ${error.message}`,
+        text: `Debug Error: ${error.message}\n\nAPI URL: ${process.env.EXPO_PUBLIC_API_URL}chat/response/\n\nCheck console for detailed logs.`,
         isUser: false,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, errorResponse]);
     } finally {
-      // Always reset loading state
       setIsLoading(false);
     }
   };
