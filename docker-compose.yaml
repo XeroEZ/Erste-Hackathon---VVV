@@ -22,38 +22,38 @@ services:
       - DB_PASSWORD=D9UmJT7tMz418GQGnUmcwIVv6za43UR4
       - DB_HOST=dpg-d3kfl5s9c44c73aeo5pg-a.frankfurt-postgres.render.com
       - DB_PORT=5432
-    depends_on:
-      - db
+#     depends_on:
+#       - db
 
-  db:
-    image: postgres:15
-    container_name: postgres-db
-    restart: always
-    environment:
-      POSTGRES_USER: django
-      POSTGRES_PASSWORD: django
-      POSTGRES_DB: django_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+#   db:
+#     image: postgres:15
+#     container_name: postgres-db
+#     restart: always
+#     environment:
+#       POSTGRES_USER: django
+#       POSTGRES_PASSWORD: django
+#       POSTGRES_DB: django_db
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
       
       
-  react:
-    container_name: react-frontend
-    build:
-      context: ./react-frontend
-    command: npx expo start --tunnel
-    volumes:
-      - ./react-frontend:/app
-      - /app/node_modules
-    ports:
-      - "19006:19006"
-      - "8081:8081"
-    environment:
-    - EXPO_PUBLIC_API_URL=http://django-backend:8000
-    - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+#   react:
+#     container_name: react-frontend
+#     build:
+#       context: ./react-frontend
+#     command: npx expo start --tunnel
+#     volumes:
+#       - ./react-frontend:/app
+#       - /app/node_modules
+#     ports:
+#       - "19006:19006"
+#       - "8081:8081"
+#     environment:
+#     - EXPO_PUBLIC_API_URL=http://django-backend:8000
+#     - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
 
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
