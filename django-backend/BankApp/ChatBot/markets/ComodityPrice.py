@@ -24,4 +24,4 @@ def cena_komodity(komodita: str):
 
 
 # 🔹 Príklad použitia:
-print(cena_komodity("platinum"))
+#print(cena_komodity("platinum"))
