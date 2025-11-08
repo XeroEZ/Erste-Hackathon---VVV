@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import ProductListView
+from .views import current_user
 
 urlpatterns = [
     path('chat/start/', views.start_chat, name='start_chat'),
@@ -24,4 +25,6 @@ urlpatterns = [
     path('public/products/all/', views.public_all_products_with_categories, name='public-all-products'),
     path('public/products/category/<str:category_type>/', views.public_products_by_category, name='public-products-by-category'),
     path('public/products/categories/overview/', views.public_product_categories_overview, name='public-products-categories-overview'),
+
+    path('user/', current_user, name='current-user'),
 ]

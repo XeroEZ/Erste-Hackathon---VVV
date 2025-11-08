@@ -30,3 +30,17 @@ def OtazkaNaGeminiBasic(otazka: str) -> str:
 
     except Exception as e:
         return f"Nastala chyba pri volaní AI: {e}"
+    
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def chat_response(request):
+    serializer = ChatRequestSerializer(data=request.data)
+    if serializer.is_valid():
+        question = serializer.validated_data['question']
+        answer = OtazkaNaGeminiBasic(question)
+        return Response({
+            "request": question,
+            "response": answer
+        })
+    return Response(serializer.errors, status=400)
+

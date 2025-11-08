@@ -44,7 +44,7 @@ const chat = () => {
         <KeyboardAwareScrollView
           enableOnAndroid={true}
           keyboardShouldPersistTaps="handled"
-          extraScrollHeight={150}
+          extraScrollHeight={180}
         >
           <View className="bg-accent rounded-lg py-3.5 flex flex-row justify-center items-center">
             <SearchBar
