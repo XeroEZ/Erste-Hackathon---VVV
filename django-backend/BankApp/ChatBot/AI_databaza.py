@@ -96,17 +96,17 @@ def AI(otazka_uzivatela):
     Blocky_po_filtovani_podla_kategorie = Filtrovanie_podla_kategorie(blocky, categories_skratka, otazka_uzivatela)
 
     Blocky_po_filtovani_aj_casu = Filtrovanie_podla_casu(Blocky_po_filtovani_podla_kategorie, otazka_uzivatela)
-    print(json.dumps(Blocky_po_filtovani_aj_casu, indent=4, ensure_ascii=False))
+    #print(json.dumps(Blocky_po_filtovani_aj_casu, indent=4, ensure_ascii=False))
 
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(BASE_DIR, "Good_blocky.json")
+    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #file_path = os.path.join(BASE_DIR, "Good_blocky.json")
 
     # uloženie do súboru
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(Blocky_po_filtovani_aj_casu, f, indent=4, ensure_ascii=False)
+    #with open(file_path, "w", encoding="utf-8") as f:
+    #    json.dump(Blocky_po_filtovani_aj_casu, f, indent=4, ensure_ascii=False)
 
-    print(f"✅ Súbor uložený: {file_path}")
+    #print(f"✅ Súbor uložený: {file_path}")
 
     return funkcie.ErikPeknyVipis(Blocky_po_filtovani_aj_casu, funkcie.Get_AllPrice_blocky(Blocky_po_filtovani_aj_casu), otazka_uzivatela)
 
