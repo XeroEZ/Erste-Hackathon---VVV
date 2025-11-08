@@ -6,27 +6,7 @@ import os
 
 
 
-
-
-def main():
-    print("Vitaj v komunikacije s Gemini")
-    # spýtaj sa používateľa na odpoveď
-    cely_json_string = funkcie.LoadUserDataJson()
-    
-    # Získanie unikátnych kategórií
-    categories_skratka = funkcie.get_categories_list(cely_json_string)
-    #print(categories_skratka)
-    # Výpis výsledkov
-
-    blocky = funkcie.Replace_multipla_categori(cely_json_string["povodne_ucetnicky"],categories_skratka)
-    #print(json.dumps(blocky, indent=4, ensure_ascii=False))
-    print(f"\nCelkový počet kategórií: {len(categories_skratka)}")
-    return
-
-
-    #print(cely_json_string)
-
-    otazka_uzivatela = input("Zadaj svoju otazku? ")
+def Filtrovanie_podla_kategorie(blocky, categories_skratka, otazka_uzivatela):
 
     prompt_na_filtrovanie_kategorii = (
         "Si AI asistent pre analýzu dát. Tvojou úlohou je filtrovať zoznam kategórií."
@@ -42,7 +22,7 @@ def main():
         "\n**Odpoveď musí byť VŽDY iba textový reťazec reprezentujúci Python zoznam (list). Nič iné.**"
         "\n" + ("-" * 30) +
         "\n[ZOZNAM VŠETKÝCH KATEGÓRIÍ]:"
-        f"\n{categories}"
+        f"\n{categories_skratka}"
         "\n" + ("-" * 30) +
         "\n[OTÁZKA POUŽÍVATEĽA]:"
         f"\n\"{otazka_uzivatela}\""
@@ -50,9 +30,42 @@ def main():
         "\n[FILTROVANÝ ZOZNAM (tvoja odpoveď)]: "
     )
 
-    result = gemini_main.OtazkaNaGeminiBasic(prompt_na_filtrovanie_kategorii)
-    # vypíš výsledok
-    print("Výsledok: ", result)
+    filtrovane_categorie = gemini_main.OtazkaNaGeminiBasic(prompt_na_filtrovanie_kategorii)
+    Good_blocky = funkcie.delete_useless_categories(blocky,filtrovane_categorie) 
+
+    return Good_blocky
+
+
+
+def main():
+    print("Vitaj v komunikacije s Gemini")
+    # spýtaj sa používateľa na odpoveď
+    cely_json_string = funkcie.LoadUserDataJson()
+    
+    # Získanie unikátnych kategórií
+    categories_skratka = funkcie.get_categories_list(cely_json_string)
+    blocky = funkcie.Replace_multipla_categori(cely_json_string["povodne_ucetnicky"],categories_skratka)
+
+    #print(json.dumps(blocky, indent=4, ensure_ascii=False))
+    print(f"\nCelkový počet kategórií: {len(categories_skratka)}")
+
+
+    #print(cely_json_string)
+
+    otazka_uzivatela = input("Zadaj svoju otazku? ")
+    Good_blocky = Filtrovanie_podla_kategorie(blocky, categories_skratka, otazka_uzivatela)
+
+    #print(json.dumps(Good_blocky, indent=4, ensure_ascii=False))
+
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "Good_blocky.json")
+
+    # uloženie do súboru
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(Good_blocky, f, indent=4, ensure_ascii=False)
+
+    print(f"✅ Súbor uložený: {file_path}")
 
 
 

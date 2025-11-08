@@ -82,8 +82,44 @@ def Replace_multipla_categori(InputBlocky, Categoris):
 
     return InputBlocky
 
-def delete_useless_categories
-    
+def delete_useless_categories(InputBlocky, Categoris):
+    """Odstráni položky, ktorých shortCategoris nie je v povolených kategóriách."""
+    cleaned_blocks = []
+
+    for blocek in InputBlocky:
+        # použijeme nový zoznam, aby sme bezpečne odstránili položky
+        new_items = []
+
+        for polozka in blocek["polozky"]:
+            short_cat = polozka.get("shortCategoris")
+
+            # preskočí položky bez kategórie
+            if short_cat is None:
+                continue
+
+            # ak shortCategoris je povolená, necháme ju
+            if short_cat in Categoris:
+                new_items.append(polozka)
+
+        # len ak po filtrovaní nie je bloček prázdny, pridáme ho späť
+        if new_items:
+            blocek["polozky"] = new_items
+            cleaned_blocks.append(blocek)
+
+    return cleaned_blocks
+            
+
+def Get_Price_From_Blocky(Blocky):#spocita cenu vsetkich produktov v blocku
+    celkova_cena = 0
+    for blocek in Blocky:
+        for polozka in blocek["polozky"]:
+            celkova_cena = polozka["celkova_cena_polozky"]
+
+
+    return celkova_cena
+
+
+
 
         
 
