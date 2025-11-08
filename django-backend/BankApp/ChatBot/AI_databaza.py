@@ -3,7 +3,7 @@ from . import funkcie
 import json
 import datetime
 import os
-
+import re
 
 def Filtrovanie_podla_kategorie(blocky, categories_skratka, otazka_uzivatela):
     prompt_na_filtrovanie_kategorii = (
@@ -55,8 +55,14 @@ def Filtrovanie_podla_casu(blocky, otazka_uzivatela):
 
     reslt = gemini_main.OtazkaNaGeminiBasic(prompt_na_filtrovania_obdobia)
     print(reslt)
+    clean_text = re.sub(r"^```json\s*|\s*```$", "", reslt.strip())
 
-    return funkcie.delete_useless_Time(blocky, oldes_time, newest_time)
+    # 🧩 2️⃣ Načítaj ako JSON
+    data = json.loads(clean_text)
+    print(data)
+
+
+    return funkcie.delete_useless_Time(blocky, data["end_date"], data["start_date"])
 
 
 def AI(otazka_uzivatela):
