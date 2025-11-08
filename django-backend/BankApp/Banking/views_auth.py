@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -9,10 +10,14 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@csrf_exempt
 def register(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -33,6 +38,7 @@ def register(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@csrf_exempt
 def login(request):
     username = request.data.get('username')
     password = request.data.get('password')

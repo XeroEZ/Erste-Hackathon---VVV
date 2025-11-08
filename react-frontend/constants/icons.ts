@@ -7,6 +7,7 @@ import logout from "@/assets/icons/logout.png";
 import send from "@/assets/icons/send.png";
 import settings from "@/assets/icons/settings.png";
 import user from "@/assets/icons/user.png";
+import assistant from "@/assets/icons/assistant.png";
 
 export const icons = {
   add,
@@ -17,5 +18,6 @@ export const icons = {
   logout,
   send,
   settings,
-  user
+  user,
+  assistant
 };

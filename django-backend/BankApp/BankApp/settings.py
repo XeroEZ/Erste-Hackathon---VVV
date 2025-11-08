@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(lp-uu%r*yjdh(2&5!k091+b5p170#_x*lrn*biy!zs*$k)b2s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -57,6 +57,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Move this to the top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +65,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'BankApp.urls'
@@ -85,11 +85,23 @@ TEMPLATES = [
     },
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True  # Temporarily for testing
+CORS_ALLOW_CREDENTIALS = True
+
 # Allow frontend to call backend
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:19006",  # Expo web interface
-    "http://localhost:19000",  # Expo dev server
+    "https://spendy.xo.je",  # Add HTTPS version
+    "http://spendy.xo.je",   # Add HTTP version (if needed)
+    "http://10.179.94.99:19006",  # Keep existing for local development
+    "http://10.179.94.99:19000",  # Keep existing for local development
+    "http://10.179.94.99:8081",
     "http://127.0.0.1:19006",
+]
+
+
+CORS_ORIGIN_WHITELIST = [
+    'http://10.179.94.99:19000',
+    'http://10.179.94.99:8081'
 ]
 
 WSGI_APPLICATION = 'BankApp.wsgi.application'

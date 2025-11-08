@@ -10,7 +10,7 @@ module.exports = {
         textSecondary: "#8D8D8D",
         iconTint: "#E3E3E3",
         warning: "#EE1212",
-        box: "#5E5E5E",
+        box: "#272727",
         stroke: "#898989",
         card:{
           blue:"#4761E4",
