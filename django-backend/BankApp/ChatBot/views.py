@@ -5,8 +5,6 @@ from . import geminiKey
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 
-
-
 # Your existing Gemini function
 @permission_classes([AllowAny])
 def OtazkaNaGeminiBasic(otazka: str) -> str:
@@ -18,7 +16,6 @@ def OtazkaNaGeminiBasic(otazka: str) -> str:
 
         config = geminiKey.types.GenerateContentConfig(
             temperature=0.0
-        )
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
