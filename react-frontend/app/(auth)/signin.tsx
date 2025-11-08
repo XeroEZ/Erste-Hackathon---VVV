@@ -13,6 +13,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { images } from "@/constants/images";
 import { router } from "expo-router";
 import userIcon from "@/assets/icons/user.png";
+import lockIcon from "@/assets/icons/lock.png";
+import showPasswordIcon from "@/assets/icons/show_password.png";
+import hidePasswordIcon from "@/assets/icons/hide_password.png";
 
 const signin = () => {
   // State management for form inputs
@@ -345,25 +348,36 @@ const signin = () => {
             ) : null}
           </View>
 
-          {/* Enhanced Password input field with icon, eye toggle, and focus animation */}
+          {/* Enhanced Password input field with custom icons */}
           <View className="mb-10">
             <View className="relative">
-              {/* Lock icon inside input */}
+              {/* Custom lock icon inside input */}
               <View className="absolute left-5 top-1/2 transform -translate-y-1/2 z-10">
-                <Text className="text-gray-300 text-lg">🔒</Text>
+                <Image
+                  source={lockIcon}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                  style={{
+                    tintColor: '#D1D5DB', // Gray-300 to match your theme
+                  }}
+                />
               </View>
 
-              {/* Password visibility toggle button */}
+              {/* Password visibility toggle with custom eye icons */}
               <TouchableOpacity
                 className="absolute right-5 top-1/2 transform -translate-y-1/2 z-10"
                 onPress={togglePasswordVisibility}
                 disabled={isLoading}
               >
-                <Text className="text-gray-300 text-lg">
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
-                </Text>
+                <Image
+                  source={showPassword ? hidePasswordIcon : showPasswordIcon}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                  style={{
+                    tintColor: '#D1D5DB', // Gray-300 to match your theme
+                  }}
+                />
               </TouchableOpacity>
-
               <TextInput
                 className="text-white text-base text-center pl-12 pr-12 py-5"
                 style={{
