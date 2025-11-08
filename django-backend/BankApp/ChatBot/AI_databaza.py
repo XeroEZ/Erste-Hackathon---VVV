@@ -67,12 +67,6 @@ def Filtrovanie_podla_casu(blocky, otazka_uzivatela):
 
 def AI(otazka_uzivatela):
     print("Vitaj v komunikácii s Gemini")
-    cely_json_string = funkcie.LoadUserDataJson()
-
-    categories_skratka = funkcie.get_categories_list(cely_json_string)
-    blocky = funkcie.Replace_multipla_categori(
-        cely_json_string["povodne_ucetnicky"], categories_skratka
-    )
 
     # Najprv skús zistiť, či otázka vôbec súvisí s databázou
     kontrolny_prompt = (
@@ -104,6 +98,13 @@ def AI(otazka_uzivatela):
             "\n[ŽIADANÁ ODPOVEĎ (začni rovno textom pre používateľa)]: "
         )
         return gemini_main.OtazkaNaGeminiBasic(odpoved_mimo)
+
+    cely_json_string = funkcie.LoadUserDataJson()
+
+    categories_skratka = funkcie.get_categories_list(cely_json_string)
+    blocky = funkcie.Replace_multipla_categori(
+        cely_json_string["povodne_ucetnicky"], categories_skratka
+    )
 
     # 🛒 Ak otázka súvisí s nákupmi, pokračuj ako doteraz
     Blocky_po_filtrovani_kategorie = Filtrovanie_podla_kategorie(
