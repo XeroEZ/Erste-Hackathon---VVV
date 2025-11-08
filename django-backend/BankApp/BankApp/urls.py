@@ -15,7 +15,7 @@ urlpatterns = [
     # API aplikácie
     path('api/banking/', include('Banking.urls')),
     path('api/core/', include('core.urls')),
-
-    # Chatbot
+  
+    #API chatbot
     path('chat/', include('ChatBot.urls')),
 ]
