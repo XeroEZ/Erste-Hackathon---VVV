@@ -152,14 +152,21 @@ def Get_newest_blocek_time(blocky):
 
     return newest_time.strftime("%Y-%m-%dT%H:%M:%SZ") if newest_time else None
 
-def delete_useless_Time(InputBlocky, start_date, end_date):
-    """Odstráni položky, ktorých shortCategoris nie je v povolených kategóriách."""
+def delete_useless_Time(InputBlocky, end_date, start_date):#end_date
+    """Odstráni položky, ktorých dátum je medzi start_date a end_date (vrátane)."""
     cleaned_blocks = []
 
-    for blocek in InputBlocky:
-        if start_date <= blocek["datum_bloku"] and blocek["datum_bloku"] <= end_date:
-            cleaned_blocks.append(blocek)
+    # prevedieme reťazce na datetime objekty
+    fmt = "%Y-%m-%dT%H:%M:%SZ"
+    start_dt = datetime.strptime(start_date, fmt)
+    end_dt = datetime.strptime(end_date, fmt)
 
+    for blocek in InputBlocky:
+        # prevod aj pre dátum bloku
+        block_dt = datetime.strptime(blocek["datum_bloku"], fmt)
+
+        if start_dt <= block_dt <= end_dt:
+            cleaned_blocks.append(blocek)
 
     return cleaned_blocks
 
@@ -174,9 +181,7 @@ def Get_AllPrice_blocky(blocky):
 
 __cache = {}
 def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
-    cache_key = f"{otazka_uzivatela}_{celkova_cena}_{len(blocky)}"
-    if cache_key in __cache:
-        return __cache[cache_key]
+    
 
     prompt_na_odpoved = (
         "Si chatbot pre finančnú aplikáciu. Tvoja úloha je odpovedať používateľovi na jeho otázku priamo, prívetivo a v prehľadnom formáte."
@@ -185,7 +190,7 @@ def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
         f"\n- **Otázka používateľa:** \"{otazka_uzivatela}\""
         f"\n- **Celková cena/suma:** {celkova_cena}"
         "\n- **Zoznam produktov/transakcií:**"
-        f"\n{blocky}"
+        f"\n{cleaned_blocks} {addTest}"
         "\n"
         "\n**POKYNY PRE GENERovanie odpovede (Výsledok AI):**"
         "\n1.  **Tón:** Používaj neformálny, ale profesionálny a ubezpečujúci tón. Komunikuj v slovenčine."

@@ -76,6 +76,30 @@ const _layout = () => {
           ),
         }}
       />
+      <Tabs.Screen
+        name="expenses"
+        options={{
+          headerShown: false,
+          title: "Expenses",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="accbalance"
+        options={{
+          headerShown: false,
+          title: "Account",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="card"
+        options={{
+          headerShown: false,
+          title: "Card",
+          href: null,
+        }}
+      />
     </Tabs>
   );
 };
