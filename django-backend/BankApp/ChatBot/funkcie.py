@@ -173,7 +173,26 @@ def Get_AllPrice_blocky(blocky):
     return round(celkova_cena, 2)
 
 
-def ErikPeknyVipis(blocky, celkova_cena):
-    print("ppp")
-    return f"Celova cena {celkova_cena}"
-    return None
+def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
+    
+
+    prompt_na_odpoved = (
+        "Si chatbot pre finančnú aplikáciu. Tvoja úloha je odpovedať používateľovi na jeho otázku priamo, prívetivo a v prehľadnom formáte."
+        "\n"
+        "\n**DÁTA K ODPOVEDI:**"
+        f"\n- **Otázka používateľa:** \"{otazka_uzivatela}\""
+        f"\n- **Celková cena/suma:** {celkova_cena}"
+        "\n- **Zoznam produktov/transakcií:**"
+        f"\n{blocky}"
+        "\n"
+        "\n**POKYNY PRE GENERovanie odpovede (Výsledok AI):**"
+        "\n1.  **Tón:** Používaj neformálny, ale profesionálny a ubezpečujúci tón. Komunikuj v slovenčine."
+        "\n2.  **Štruktúra:** Odpoveď začni krátkym zhrnutím celkovej sumy, na ktorú sa pýta."
+        "\n3.  **Formátovanie:** Použi formátovanie Markdown (napr. **tučné písmo** a odrážky `*`), ale **vyhni sa hviezdičkám v prostrednom texte** a iným rušivým znakom, ktoré by mohli pokaziť vizuál aplikácie. Odpoveď musí byť elegantný textový blok."
+        "\n4.  **Obsah:** Vždy uveď **celkovú sumu** na začiatku. Následne prehľadne vypíš **zoznam súvisiacich produktov/transakcií** (zoznam vyššie). Detaily zo zoznamu iba preberaj, **nekomentuj ich**."
+        "\n5.  **Čistota výstupu:** Tvojou **JEDINOU** odpoveďou musí byť výsledný text pre používateľa. Žiadne úvodné frázy ako 'Tu je odpoveď', 'Vypočítal som' alebo komentáre k pokynom."
+        "\n"
+        "\n[ŽIADANÝ VÝSLEDOK (začni rovno odpoveďou)]: "
+    )
+
+    return gemini_main.OtazkaNaGeminiBasic(prompt_na_odpoved).replace("*","")

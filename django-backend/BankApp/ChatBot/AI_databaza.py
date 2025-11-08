@@ -108,8 +108,7 @@ def AI(otazka_uzivatela):
 
     print(f"✅ Súbor uložený: {file_path}")
 
-    print("eee")
-    return funkcie.ErikPeknyVipis(Blocky_po_filtovani_aj_casu, funkcie.Get_AllPrice_blocky(Blocky_po_filtovani_aj_casu))
+    return funkcie.ErikPeknyVipis(Blocky_po_filtovani_aj_casu, funkcie.Get_AllPrice_blocky(Blocky_po_filtovani_aj_casu), otazka_uzivatela)
 
 
 
