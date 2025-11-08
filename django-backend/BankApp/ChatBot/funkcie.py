@@ -183,6 +183,19 @@ def Get_AllPrice_blocky(blocky):
 def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
     print(f"Blocky {len(blocky)}")
 
+    addTest = ""
+
+
+    cleaned_blocks = []
+    for blocek in blocky:
+        cleaned_blocks.append(blocek)
+        if len(cleaned_blocks) > 10:
+            break
+
+
+    if len(cleaned_blocks) > 9:
+        addTest + " a este viac ..."
+
 
 
     prompt_na_odpoved = (
@@ -192,7 +205,7 @@ def ErikPeknyVipis(blocky, celkova_cena, otazka_uzivatela):
         f"\n- **Otázka používateľa:** \"{otazka_uzivatela}\""
         f"\n- **Celková cena/suma:** {celkova_cena}"
         "\n- **Zoznam produktov/transakcií:**"
-        f"\n{blocky}"
+        f"\n{cleaned_blocks} {addTest}"
         "\n"
         "\n**POKYNY PRE GENERovanie odpovede (Výsledok AI):**"
         "\n1.  **Tón:** Používaj neformálny, ale profesionálny a ubezpečujúci tón. Komunikuj v slovenčine."
