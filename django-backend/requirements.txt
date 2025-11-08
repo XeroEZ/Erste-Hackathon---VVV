@@ -10,3 +10,4 @@ typing_extensions==4.15.0
 argon2-cffi
 google-genai
 google
+rapidfuzz
