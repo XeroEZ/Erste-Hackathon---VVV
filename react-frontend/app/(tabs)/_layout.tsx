@@ -3,7 +3,6 @@ import { images } from "@/constants/images";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Image, ImageBackground, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabIcon = ({ focused, icon }: any) => {
   if (focused) {
@@ -63,7 +62,7 @@ const _layout = () => {
           headerShown: false,
           title: "Chatbot",
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.chatbot} />
+            <TabIcon focused={focused} icon={icons.assistant} />
           ),
         }}
       />
