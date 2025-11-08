@@ -37,7 +37,6 @@ def OtazkaUzivatela(OtazkaUzivatela):
         "\n**Odpoveď musí byť len jedno slovo: 'Stocko', 'Komodity', 'Krypto' alebo 'Iné'.**"
         f"\nOtázka: \"{OtazkaUzivatela}\""
     )
-
     split = OtazkaNaGeminiBasic(prompt_text_for_split)
 
     if "Stock" in split:
