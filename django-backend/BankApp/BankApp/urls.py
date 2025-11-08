@@ -17,5 +17,5 @@ urlpatterns = [
     path('api/core/', include('core.urls')),
 
     # Chatbot
-    path('chat/', include('Chatbot.urls')),
+    path('chat/', include('ChatBot.urls')),
 ]
