@@ -1,4 +1,5 @@
 from . import geminiKey
+from . import AI_databaza
 from .markets import StockPrice
 from .markets import ComodityPrice
 from .markets import CryptoPrice
@@ -30,9 +31,9 @@ def OtazkaUzivatela(OtazkaUzivatela):
     prompt_text_for_split = (
         "Si klasifikačný nástroj. Tvojou jedinou úlohou je určiť, do ktorej z kategórií patrí nasledujúca otázka."
         "\n1. **Stocko (Akcie/Cenné papiere):** otázky o cenách akcií, indexov, ETF, dlhopisov."
-        "\n2. **Komodity:** otázky o fyzických komoditách (zlato, ropa, pšenica...)."
+        "\n2. **Komodity:** otázky o investičných a obchodovaných fyzických komoditách (napr. zlato, striebro, ropa, pšenica, káva). *NEZAHŔŇA nákupy bežného spotrebného tovaru.*"
         "\n3. **Krypto:** otázky o kryptomenách (Bitcoin, Ethereum, Solana, Dogecoin...)."
-        "\n4. **Iné:** všetko ostatné."
+        "\n4. **Iné:** Všetko ostatné, vrátane otázok o **osobných nákupoch** bežného spotrebného tovaru (ako **mäso, oblečenie**, potraviny, elektronika, atď.) a otázok nesúvisiacich s investíciami."
         "\n**Odpoveď musí byť len jedno slovo: 'Stocko', 'Komodity', 'Krypto' alebo 'Iné'.**"
         f"\nOtázka: \"{OtazkaUzivatela}\""
     )
@@ -40,13 +41,17 @@ def OtazkaUzivatela(OtazkaUzivatela):
     split = OtazkaNaGeminiBasic(prompt_text_for_split)
 
     if "Stock" in split:
+        print("Stock")
         return Stock(OtazkaUzivatela)
     elif "Komodity" in split:
+        print("Komodity")
         return Comodity(OtazkaUzivatela)
     elif "Krypto" in split:
+        print("Krypto")
         return Crypto(OtazkaUzivatela)
     else:
-        return "Toto nie je otázka o trhoch."
+        print("Ine")
+        return AI_databaza.AI(OtazkaUzivatela)
 
 def Stock(OtazkaUzivatela):
     prompt_text_for_split = (f"Rozdel otazku uzivatela na Nazov stock a medzinarodnu skratku stock. A odpis mi 'Nazov,Skratku'. \nOtazka uzivatela: {OtazkaUzivatela}"
