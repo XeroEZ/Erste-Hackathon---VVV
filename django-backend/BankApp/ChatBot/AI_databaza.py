@@ -3,7 +3,7 @@ from . import funkcie
 import json
 import datetime
 import os
-
+import re
 
 def Filtrovanie_podla_kategorie(blocky, categories_skratka, otazka_uzivatela):
     prompt_na_filtrovanie_kategorii = (
@@ -55,18 +55,18 @@ def Filtrovanie_podla_casu(blocky, otazka_uzivatela):
 
     reslt = gemini_main.OtazkaNaGeminiBasic(prompt_na_filtrovania_obdobia)
     print(reslt)
+    clean_text = re.sub(r"^```json\s*|\s*```$", "", reslt.strip())
 
-    return funkcie.delete_useless_Time(blocky, oldes_time, newest_time)
+    # 🧩 2️⃣ Načítaj ako JSON
+    data = json.loads(clean_text)
+    #print(data)
+
+
+    return funkcie.delete_useless_Time(blocky, data["end_date"], data["start_date"])
 
 
 def AI(otazka_uzivatela):
     print("Vitaj v komunikácii s Gemini")
-    cely_json_string = funkcie.LoadUserDataJson()
-
-    categories_skratka = funkcie.get_categories_list(cely_json_string)
-    blocky = funkcie.Replace_multipla_categori(
-        cely_json_string["povodne_ucetnicky"], categories_skratka
-    )
 
     # Najprv skús zistiť, či otázka vôbec súvisí s databázou
     kontrolny_prompt = (
@@ -98,6 +98,13 @@ def AI(otazka_uzivatela):
             "\n[ŽIADANÁ ODPOVEĎ (začni rovno textom pre používateľa)]: "
         )
         return gemini_main.OtazkaNaGeminiBasic(odpoved_mimo)
+
+    cely_json_string = funkcie.LoadUserDataJson()
+
+    categories_skratka = funkcie.get_categories_list(cely_json_string)
+    blocky = funkcie.Replace_multipla_categori(
+        cely_json_string["povodne_ucetnicky"], categories_skratka
+    )
 
     # 🛒 Ak otázka súvisí s nákupmi, pokračuj ako doteraz
     Blocky_po_filtrovani_kategorie = Filtrovanie_podla_kategorie(

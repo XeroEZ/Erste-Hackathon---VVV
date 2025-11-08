@@ -110,7 +110,8 @@ def main():
     # volanie tvojej funkcie AkinatorHra s parametrom
     result = OtazkaUzivatela(user_input)
     # vypíš výsledok
-    print("Výsledok:", result)
+    print(f"\033[92mVýsledok: {result}\033[0m")
+
 
 
 if __name__ == "__main__":
