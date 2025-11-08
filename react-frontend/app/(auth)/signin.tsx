@@ -12,6 +12,7 @@ import {
 import React, { useState, useRef, useEffect } from "react";
 import { images } from "@/constants/images";
 import { router } from "expo-router";
+import userIcon from "@/assets/icons/user.png";
 
 const signin = () => {
   // State management for form inputs
@@ -229,17 +230,7 @@ const signin = () => {
       // Always reset loading state
       setIsLoading(false);
     }
-  };
-
-  /**
-   * Handle forgot password action
-   */
-  const handleForgotPassword = () => {
-    Alert.alert(
-      "Zabudnuté heslo",
-      "Funkcia na obnovenie hesla bude implementovaná."
-    );
-  };
+  }
 
   /**
    * Toggle password visibility
@@ -302,12 +293,19 @@ const signin = () => {
             ],
           }}
         >
-          {/* Enhanced User ID input field with icon and focus animation */}
+          {/* Enhanced User ID input field with custom icon */}
           <View className="mb-6">
             <View className="relative">
-              {/* User icon inside input */}
+              {/* Custom user icon inside input */}
               <View className="absolute left-5 top-1/2 transform -translate-y-1/2 z-10">
-                <Text className="text-gray-300 text-lg">👤</Text>
+                <Image
+                  source={userIcon}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                  style={{
+                    tintColor: '#D1D5DB', // Gray-300 to match your theme
+                  }}
+                />
               </View>
 
               <TextInput
@@ -441,22 +439,6 @@ const signin = () => {
               )}
             </TouchableOpacity>
           </Animated.View>
-
-          {/* Forgot password link with extra spacing */}
-          <View className="mt-8 items-center">
-            <TouchableOpacity
-              onPress={handleForgotPassword}
-              disabled={isLoading}
-            >
-              <Text
-                className={`text-sm underline ${
-                  isLoading ? "text-gray-500" : "text-blue-300"
-                }`}
-              >
-                Zabudli ste heslo?
-              </Text>
-            </TouchableOpacity>
-          </View>
         </Animated.View>
       </View>
     </View>
