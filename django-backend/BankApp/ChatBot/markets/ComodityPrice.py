@@ -15,7 +15,7 @@ def cena_komodity(komodita: str):
         
         resp.raise_for_status()
         data = resp.json()
-        return f"Aktualna cena {komodita} je: {round(data["price"] * 0.86, 2)} €."
+        return f"Aktualna cena {komodita} je: {round(data['price'] * 0.86, 2)} €."
 
     except requests.exceptions.RequestException as e:
         return f"Chyba pri načítaní dát: {e}"
