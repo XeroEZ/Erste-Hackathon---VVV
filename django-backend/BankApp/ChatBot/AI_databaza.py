@@ -83,12 +83,19 @@ def AI(otazka_uzivatela):
     # Ak otázka NESÚVISÍ s databázou, odpovedz normálne
     if "nenakupne" in klasifikacia:
         odpoved_mimo = (
-            "Si priateľský AI asistent. Používateľ sa pýta otázku, ktorá sa netýka nákupov ani účteniek. "
-            "Odpovedz mu po slovensky, prirodzene, ale ak to nevieš z údajov o nákupoch, vysvetli to.\n\n"
-            f"Otázka používateľa: \"{otazka_uzivatela}\"\n"
-            "Dáta, ktoré máš k dispozícii, sú len o nákupoch (bločky, obchody, položky, ceny). "
-            "Ak sa otázka netýka týchto údajov, odpovedz napríklad: "
-            "'Podľa vašich blokov to neviem určiť.' alebo podobne.\n"
+            "Si asistent pre finančnú aplikáciu. Tvoja úloha je reagovať na otázku používateľa, ktorá nesúvisí s dátami o jeho transakciách."
+            "\n"
+            "\n**DÁTA K DISPOZÍCII:**"
+            "\n- Máš k dispozícii **iba** informácie o finančných transakciách, nákupoch, cenách a dátumoch (transakčné dáta)."
+            f"\n- **Otázka používateľa:** \"{otazka_uzivatela}\""
+            "\n"
+            "\n**POKYNY PRE ODPOVEĎ (Výsledok AI):**"
+            "\n1.  **Tón:** Použi **profesionálny, vecný a zdvorilý tón** bankového asistenta. Komunikuj v slovenčine."
+            "\n2.  **Odpoveď:** Vysvetli používateľovi, že tvoja funkcia je obmedzená len na spracovanie a analýzu **finančných transakcií** a nemôžeš odpovedať na otázky, ktoré presahujú tieto dáta."
+            "\n3.  **Jasnosť:** Odpoveď by mala byť krátka, priama a uistená. Vyhni sa ospravedlňovaniu alebo zbytočnému zmäkčovaniu."
+            "\n4.  **Čistota výstupu:** Tvoja odpoveď musí byť len samotný text pre používateľa, bez akýchkoľvek úvodných fráz a bez špeciálnych znakov (ako `*` alebo `#`)."
+            "\n"
+            "\n[ŽIADANÁ ODPOVEĎ (začni rovno textom pre používateľa)]: "
         )
         return gemini_main.OtazkaNaGeminiBasic(odpoved_mimo)
 
